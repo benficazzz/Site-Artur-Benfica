@@ -72,8 +72,8 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Testes: 31 regras no emulador, 27 verificações no Worker, página no computador e iPhone
 
 ## Outros
-- Aviso de venda no Telegram (opcional): segredos `TELEGRAM_TOKEN` e texto `TELEGRAM_CHAT_ID` no Worker; teste em `/testeAviso?chat=<id>`
-- Páginas legais: `termos.html` e `privacidade.html` (modelo; CNPJ e cidade a preencher; revisar com contador)
+- Aviso de venda no Telegram: LIGADO e testado (bot "Venda Lojinha Benfica", chat 5206927383). Segredo `TELEGRAM_TOKEN` e texto `TELEGRAM_CHAT_ID` no Worker; teste em `/testeAviso?chat=5206927383`
+- Páginas legais: `termos.html` e `privacidade.html` (CNPJ 69.264.690/0001-92, Betim/MG; texto modelo, revisar com contador)
 - Cache: `python3 ferramentas/versao.py` carimba `?v=` nos CSS/JS antes de cada publicação
 
 ## Fluxo de trabalho
