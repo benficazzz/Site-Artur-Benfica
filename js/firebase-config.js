@@ -13,8 +13,11 @@ window.FIREBASE_CONFIG = {
   appId: "1:586450045742:web:012c6a94f8e83c28ec08bf",
 };
 
-// Endereço das funções do servidor (região São Paulo)
-window.LOJA_API = "https://southamerica-east1-estudio-benfica.cloudfunctions.net";
+// Endereço do servidor de pagamento (Cloudflare Worker). Preencha depois de publicar o Worker.
+window.LOJA_API = "";
+
+// Conta de serviço usada pelo servidor para ler o banco e entregar os originais do Drive
+window.LOJA_SERVIDOR_EMAIL = "loja-servidor@estudio-benfica.iam.gserviceaccount.com";
 
 // Troque para true quando o pagamento estiver pronto
-window.LOJA_ATIVA = false;
+window.LOJA_ATIVA = false; // true + LOJA_API preenchido = pagamento online ligado

@@ -62,9 +62,22 @@ export async function criarBancoFirebase(config) {
     return (pastas[k] = nova.id);
   }
 
+  /** Dá ao servidor de pagamento (conta de serviço) acesso de leitura à pasta dos originais, para entregar após o pagamento. */
+  let servidorLiberado = false;
+  async function liberarParaServidor(pastaId) {
+    const email = window.LOJA_SERVIDOR_EMAIL;
+    if (!email || servidorLiberado) return;
+    try {
+      await drive(`/drive/v3/files/${pastaId}/permissions?sendNotificationEmail=false&fields=id`, { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role: "reader", type: "user", emailAddress: email }) });
+      servidorLiberado = true;
+    } catch (e) { console.warn("Não consegui liberar a pasta para o servidor", e); }
+  }
+
   /** Envia o original para o Drive (envio retomável, com progresso). */
   async function enviarOriginal(arquivo, nomeEvento, aoProgresso = () => {}) {
     const raiz = await pasta(DRIVE_PASTA_RAIZ);
+    await liberarParaServidor(raiz);
     const destino = await pasta(nomeEvento, raiz);
     const token = await tokenDrive();
     const ini = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id,name,mimeType,size", {

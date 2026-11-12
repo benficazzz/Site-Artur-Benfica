@@ -10,7 +10,7 @@ const P = window.Precos;
 const brl = P.brl;
 const CFG = window.FIREBASE_CONFIG || {};
 const API = window.LOJA_API;
-const REAL = !!(CFG.apiKey && CFG.appId && window.LOJA_ATIVA);
+const REAL = !!(CFG.apiKey && CFG.appId && window.LOJA_ATIVA && API);
 
 let eventos = [];          // [{id, nome, data, local, capa, precos?, itens:[...]}]
 let precosGlobais = {};
@@ -300,7 +300,7 @@ async function telaPedido(pedido, token, tentativa = 0) {
     if (d.status === "pago") {
       $("#ped-titulo").innerHTML = `Pagamento <em class="accent">aprovado!</em>`;
       $("#ped-texto").textContent = "Obrigado! Baixe seus arquivos abaixo. Guarde este link: ele fica disponível por 30 dias.";
-      $("#ped-downloads").innerHTML = d.itens.map((i) => `<div class="download"><img src="${esc(i.previa)}" alt="" loading="lazy"><b>${esc(i.titulo || "")}</b>
+      $("#ped-downloads").innerHTML = d.itens.map((i) => `<div class="download">${i.previa ? `<img src="${esc(i.previa)}" alt="" loading="lazy">` : ""}<b>${esc(i.titulo || "")}</b>
         <a class="btn btn--lime btn--small" href="${API}/baixar?pedido=${encodeURIComponent(pedido)}&t=${encodeURIComponent(token)}&item=${encodeURIComponent(i.chave)}">Baixar ${i.tipo === "video" ? "vídeo" : "foto"}</a></div>`).join("");
     } else if (d.status === "recusado") {
       $("#ped-titulo").textContent = "Pagamento não aprovado";
