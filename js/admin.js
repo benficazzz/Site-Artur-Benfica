@@ -338,7 +338,7 @@ $("#form-precos").addEventListener("submit", async (e) => {
 /* =========================================================
    PEDIDOS
    ========================================================= */
-const ST = { novo: "Novo", pago: "Pago", entregue: "Entregue", cancelado: "Cancelado" };
+const ST = { novo: "Novo", aguardando: "Aguardando pagamento", pago: "Pago", entregue: "Entregue", cancelado: "Cancelado" };
 async function carregarPedidos(soBadge = false) {
   try { pedidos = await banco.listarPedidos(); } catch (e) { console.error(e); pedidos = []; }
   const novos = pedidos.filter((p) => p.status === "novo").length;

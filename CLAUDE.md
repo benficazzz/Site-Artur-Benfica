@@ -11,8 +11,8 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Stack: HTML + CSS + JS puro, sem etapa de build
 - Arquivos principais: `index.html`, `css/style.css`, `js/main.js`, `js/config.js` (contatos)
 - Loja: `loja.html`, `css/loja.css`, `js/loja.js`, `js/precos.js`, `js/loja-demo.js`, `data/catalogo.json` (ainda não existe; é gerado)
-- Servidor (escrito, ainda NÃO publicado): `functions/` (Cloud Functions), `firestore.rules`, `storage.rules`, `firebase.json`
-- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `assets/logo/LEIA-ME.md`
+- Servidor de pagamento: `worker/loja-worker.js` (Cloudflare Worker, gerado por `ferramentas/montar_worker.py` a partir de `worker/src.js` + `js/precos.js`). Guia em `PAGAMENTO.md`. A pasta `functions/` (Cloud Functions) ficou como alternativa caso o Blaze seja ativado
+- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `PAGAMENTO.md`, `assets/logo/LEIA-ME.md`
 
 ## Identidade
 - Marca: **Estúdio Benfica**. Logo aprovado: conceito **01 · Visor** (cantos do visor de câmera + play verde-limão)
@@ -46,7 +46,7 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
   - App Web registrado. A configuração pública já está em `js/firebase-config.js`
   - **Plano Spark:** o upgrade para o Blaze falhou (problema com o cartão). Sem o Blaze não há Cloud Functions nem Storage
 - **Mercado Pago:** conta CNPJ. A aplicação Checkout Pro ainda não foi criada. O token NUNCA passa pelo chat: vai como segredo (`firebase functions:secrets:set MP_ACCESS_TOKEN`) ou como variável secreta equivalente
-- **Plano B, se o Blaze não for possível:** servidor de pagamento no Cloudflare Workers (grátis) + Firestore no Spark + originais entregues a partir do Drive
+- **Pagamento (ligado, token de TESTE do Mercado Pago; Worker https://loja-estudio-benfica.arturbenfica5.workers.dev):** Cloudflare Worker (grátis) + Firestore no Spark + originais entregues do Drive pela conta de serviço `loja-servidor@estudio-benfica.iam.gserviceaccount.com` (papel Cloud Datastore User; o painel compartilha a pasta de originais com ela). Segredos no Worker: `GOOGLE_SERVICE_ACCOUNT`, `MP_ACCESS_TOKEN`; texto `SITE_URL`. Para ligar: `LOJA_API` = URL do Worker e `LOJA_ATIVA = true` em `js/firebase-config.js`. Worker testado com serviços simulados (17 verificações)
 - Ambiente: este container bloqueia api.mercadopago.com. As APIs do Google estão acessíveis
 
 ## Painel de admin (feito, falta ativar no console)
