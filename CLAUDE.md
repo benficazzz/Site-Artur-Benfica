@@ -12,7 +12,7 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Arquivos principais: `index.html`, `css/style.css`, `js/main.js`, `js/config.js` (contatos)
 - Loja: `loja.html`, `css/loja.css`, `js/loja.js`, `js/precos.js`, `js/loja-demo.js`, `data/catalogo.json` (ainda não existe; é gerado)
 - Servidor (escrito, ainda NÃO publicado): `functions/` (Cloud Functions), `firestore.rules`, `storage.rules`, `firebase.json`
-- Guias: `README.md`, `LOJA.md`, `assets/logo/LEIA-ME.md`
+- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `assets/logo/LEIA-ME.md`
 
 ## Identidade
 - Marca: **Estúdio Benfica**. Logo aprovado: conceito **01 · Visor** (cantos do visor de câmera + play verde-limão)
@@ -49,22 +49,19 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - **Plano B, se o Blaze não for possível:** servidor de pagamento no Cloudflare Workers (grátis) + Firestore no Spark + originais entregues a partir do Drive
 - Ambiente: este container bloqueia api.mercadopago.com. As APIs do Google estão acessíveis
 
-## PRÓXIMA TAREFA pedida pelo Artur: painel de admin no site
-Quer gerenciar tudo pelo navegador, sem depender do Claude:
-- Criar álbuns ou eventos
-- Subir fotos e vídeos, com prévia e marca d'água automáticas
-- Marcar time e atleta de cada item
-- Definir preços e pacotes (avulso, por quantidade, atleta, time)
-- Publicar ou ocultar eventos e criar galerias privadas
-- Ver pedidos
-
-Pontos a decidir no início:
-1. **Login do admin:** Firebase Auth com Google (funciona no Spark), liberando só o e-mail do Artur nas regras
-2. **Catálogo e preços:** Firestore (funciona no Spark). A loja passa a ler do Firestore, e o `data/catalogo.json` vira alternativa
-3. **Arquivos:** sem Blaze não há Storage. Opções:
-   - (a) O painel envia os originais para o **Drive** pela API Google com o login do Artur, gera a prévia com marca d'água no próprio navegador (canvas) e guarda as prévias num lugar público. Esse lugar ainda está em aberto: Cloudflare R2/Pages ou commit no GitHub pela API
-   - (b) Conseguir o Blaze e usar o Storage
-4. Pagamento automático (Mercado Pago + entrega) continua dependendo de um servidor: Blaze ou Cloudflare
+## Painel de admin (feito, falta ativar no console)
+- `admin.html` + `js/admin.js` + `css/admin.css`; dados em `js/banco.js`; marca d'água no navegador em `js/marca.js`
+- Login Google (Firebase Auth) restrito a arturbenfica5@gmail.com; escopo `drive.file` para enviar originais ao Drive
+  (pasta "Loja Estúdio Benfica · Originais"). Prévias no Firestore (`previas/{id}`, < 700 KB) e miniatura no item
+- Firestore: `eventos/{id}` (nome, data, local, times, publico, privado, precos, capa, contagem),
+  `eventos/{id}/itens/{id}` (tipo, thumb, temPrevia, time, atleta, titulo, ordem), `previas`, `originais` (só admin),
+  `config/precos`, `pedidos` (visitante só cria; status novo/pago/entregue/cancelado)
+- A loja lê primeiro o Firestore; sem eventos lá, usa `data/catalogo.json`; sem ele, a demonstração
+- Pedido pelo WhatsApp é registrado no Firestore com código (8 primeiros caracteres do id)
+- Modo de treino: `admin.html?teste=1` e `loja.html?teste=1` (localStorage)
+- `firestore.rules` testado no emulador (24 casos) e o fluxo ponta a ponta também (painel → loja → pedido → entrega)
+- **Falta o Artur:** ativar login Google, autorizar o domínio benficazzz.github.io, publicar as regras e ativar a Drive API (ver `ADMIN.md`)
+- Hook só para testes: `window.FIREBASE_EMULADOR` (nunca definido no site)
 
 ## Fluxo de trabalho
 - Testar com Playwright (Chromium já instalado), no computador e no iPhone 13, sem rolagem horizontal

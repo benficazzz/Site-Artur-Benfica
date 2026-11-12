@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Painel · Estúdio Benfica</title>
+  <meta name="theme-color" content="#07080b" />
+  <link rel="icon" href="assets/logo/svg/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin is-ready">
+  <header class="adm-topo">
+    <a href="index.html" class="logo" aria-label="Estúdio Benfica">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg>
+      <span class="logo__text"><small>PAINEL</small>BENFICA</span>
+    </a>
+    <nav class="adm-abas" id="abas" hidden>
+      <button data-aba="eventos" class="is-active">Eventos</button>
+      <button data-aba="precos">Preços</button>
+      <button data-aba="pedidos">Pedidos <span class="adm-badge" id="badge-pedidos" hidden></span></button>
+    </nav>
+    <div class="adm-user" id="usuario" hidden>
+      <span id="u-nome"></span>
+      <button class="btn btn--ghost btn--small" id="sair">Sair</button>
+    </div>
+  </header>
+
+  <div class="adm-faixa" id="faixa-teste" hidden>
+    <b>Modo de teste.</b> Nada aqui vai para o site nem para o Drive: os dados ficam só neste navegador.
+  </div>
+
+  <main class="adm-main">
+    <!-- Login -->
+    <section class="adm-login" id="tela-login" hidden>
+      <div class="adm-card adm-card--login">
+        <p class="eyebrow hud"><span class="dot"></span> Área restrita</p>
+        <h1>Painel do Estúdio</h1>
+        <p>Entre com a sua conta Google para gerenciar eventos, fotos, preços e pedidos.</p>
+        <button class="btn btn--lime btn--block" id="entrar">Entrar com Google</button>
+        <p class="adm-nota" id="login-msg"></p>
+      </div>
+    </section>
+
+    <!-- EVENTOS -->
+    <section class="adm-aba" id="aba-eventos" hidden>
+      <aside class="adm-lateral">
+        <button class="btn btn--lime btn--block" id="novo-evento">+ Novo evento</button>
+        <div class="adm-eventos" id="lista-eventos"></div>
+      </aside>
+
+      <div class="adm-conteudo">
+        <div class="adm-vazio" id="ev-vazio">
+          <h2>Escolha um evento ou crie um novo.</h2>
+          <p>Cada evento é um álbum da loja: um jogo, um campeonato, uma festa ou uma formatura.</p>
+        </div>
+
+        <div id="ev-editor" hidden>
+          <form class="adm-card" id="form-evento">
+            <div class="adm-linha">
+              <h2 id="ev-titulo">Novo evento</h2>
+              <a class="loja__link" id="ev-ver" target="_blank" rel="noopener" hidden>Ver na loja ↗</a>
+            </div>
+            <div class="adm-grade">
+              <label class="adm-campo adm-campo--2">Nome do evento<input name="nome" required maxlength="90" placeholder="Ex.: Copa Prime Arena 2026"></label>
+              <label class="adm-campo">Data<input name="data" type="date" required></label>
+              <label class="adm-campo">Local<input name="local" maxlength="60" placeholder="Ex.: Betim · MG"></label>
+              <label class="adm-campo adm-campo--2">Times (separados por vírgula)<input name="times" maxlength="400" placeholder="Ex.: Cassino FC, Lazio MTR"></label>
+            </div>
+            <fieldset class="adm-visib">
+              <legend>Visibilidade</legend>
+              <label><input type="radio" name="visib" value="publico" checked> <b>Publicado</b><small>aparece na loja para todos</small></label>
+              <label><input type="radio" name="visib" value="privado"> <b>Galeria privada</b><small>só quem tem o link</small></label>
+              <label><input type="radio" name="visib" value="oculto"> <b>Oculto</b><small>ninguém vê (rascunho)</small></label>
+            </fieldset>
+            <div class="adm-link-privado" id="link-privado" hidden>
+              <span>Link da galeria privada:</span> <code id="link-privado-url"></code>
+              <button type="button" class="btn btn--ghost btn--small" id="copiar-link">Copiar</button>
+            </div>
+            <details class="adm-precos-ev">
+              <summary>Preços dos pacotes fechados deste evento (opcional)</summary>
+              <p class="adm-nota">Deixe em branco para usar os preços gerais da aba "Preços".</p>
+              <div class="adm-grade adm-grade--3" id="precos-evento"></div>
+            </details>
+            <div class="adm-acoes">
+              <button class="btn btn--lime" type="submit">Salvar evento</button>
+              <button class="btn btn--ghost" type="button" id="apagar-evento" hidden>Excluir evento</button>
+              <span class="adm-nota" id="ev-msg" role="status"></span>
+            </div>
+          </form>
+
+          <div class="adm-card" id="bloco-envio" hidden>
+            <h2>Adicionar fotos e vídeos</h2>
+            <div class="adm-grade adm-grade--3">
+              <label class="adm-campo">Time destes arquivos<select id="up-time"><option value="">(sem time)</option></select></label>
+              <label class="adm-campo">Atleta (opcional)<input id="up-atleta" maxlength="40" placeholder="Ex.: Camisa 10 ou João" list="atletas-lista"></label>
+              <datalist id="atletas-lista"></datalist>
+            </div>
+            <label class="adm-drop" id="drop">
+              <input type="file" id="up-arquivos" multiple accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" hidden>
+              <b>Arraste as fotos e vídeos aqui</b>
+              <span>ou toque para escolher · JPG, PNG, MP4, MOV</span>
+            </label>
+            <p class="adm-nota">O original vai para o seu Google Drive (pasta "Loja Estúdio Benfica · Originais"). A loja só mostra a prévia com marca d'água.</p>
+            <div class="adm-fila" id="fila"></div>
+          </div>
+
+          <div class="adm-card" id="bloco-itens" hidden>
+            <div class="adm-linha">
+              <h2>Arquivos do evento <small id="it-contagem"></small></h2>
+              <select id="it-filtro" aria-label="Filtrar por time"><option value="">Todos os times</option></select>
+            </div>
+            <div class="adm-barra-sel" id="barra-sel" hidden>
+              <b id="sel-qtd"></b>
+              <select id="sel-time" aria-label="Definir time"><option value="">Definir time…</option></select>
+              <input id="sel-atleta" placeholder="Definir atleta…" maxlength="40" list="atletas-lista">
+              <button class="btn btn--small btn--lime" id="sel-aplicar">Aplicar</button>
+              <button class="btn btn--small btn--ghost" id="sel-apagar">Apagar</button>
+              <button class="loja__link" id="sel-limpar">Limpar seleção</button>
+            </div>
+            <div class="adm-itens" id="itens"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREÇOS -->
+    <section class="adm-aba" id="aba-precos" hidden>
+      <form class="adm-card adm-largo" id="form-precos">
+        <h2>Preços gerais da loja</h2>
+        <p class="adm-nota">Valem para todos os eventos, menos quando o evento tem preço próprio. O cliente sempre paga a combinação mais barata.</p>
+        <div class="adm-precos">
+          <div><h3>Fotos</h3><label class="adm-campo">Foto avulsa (R$)<input type="number" step="0.01" min="0" name="foto_avulso"></label>
+            <h4>Pacotes por quantidade</h4><div class="adm-pacotes" data-tipo="foto"></div><button type="button" class="loja__link" data-add="foto">+ pacote de fotos</button></div>
+          <div><h3>Vídeos</h3><label class="adm-campo">Vídeo avulso (R$)<input type="number" step="0.01" min="0" name="video_avulso"></label>
+            <h4>Pacotes por quantidade</h4><div class="adm-pacotes" data-tipo="video"></div><button type="button" class="loja__link" data-add="video">+ pacote de vídeos</button></div>
+        </div>
+        <h3>Pacotes fechados (tudo do atleta ou do time)</h3>
+        <div class="adm-grade adm-grade--3" id="precos-escopo"></div>
+        <div class="adm-exemplo" id="exemplo-precos"></div>
+        <div class="adm-acoes"><button class="btn btn--lime" type="submit">Salvar preços</button><span class="adm-nota" id="precos-msg" role="status"></span></div>
+      </form>
+    </section>
+
+    <!-- PEDIDOS -->
+    <section class="adm-aba" id="aba-pedidos" hidden>
+      <div class="adm-largo">
+        <div class="adm-linha">
+          <h2>Pedidos</h2>
+          <div class="seg" id="ped-filtro"><button data-st="" class="is-active">Todos</button><button data-st="novo">Novos</button><button data-st="pago">Pagos</button><button data-st="entregue">Entregues</button><button data-st="cancelado">Cancelados</button></div>
+        </div>
+        <div class="adm-pedidos" id="pedidos"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="adm-dialogo" id="dialogo">
+    <form method="dialog">
+      <h2 id="dlg-titulo"></h2>
+      <div id="dlg-corpo"></div>
+      <div class="adm-acoes"><button class="btn btn--lime" value="ok" id="dlg-ok">OK</button><button class="btn btn--ghost" value="cancelar" id="dlg-cancelar">Cancelar</button></div>
+    </form>
+  </dialog>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/precos.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

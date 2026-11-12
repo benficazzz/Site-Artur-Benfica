@@ -3,6 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;
@@ -14,6 +15,8 @@ const REAL = !!(CFG.apiKey && CFG.appId && window.LOJA_ATIVA);
 let eventos = [];          // [{id, nome, data, local, capa, precos?, itens:[...]}]
 let precosGlobais = {};
 let demo = false;
+let banco = null;           // Firestore (eventos criados no painel)
+const TESTE = new URLSearchParams(location.search).has("teste");
 let atual = null;          // evento aberto
 const filtro = { time: "", atleta: "", tipo: "" };
 
@@ -25,8 +28,19 @@ const salvar = () => { try { localStorage.setItem(KEY, JSON.stringify(carrinho))
 
 /* ---------- Dados ---------- */
 async function carregar() {
-  // 1) catálogo gerado a partir do Drive (ferramentas/sincronizar_loja.py)
+  // 1) eventos criados no painel (Firestore)
   try {
+    banco = TESTE ? criarBancoTeste() : CFG.apiKey ? await criarBancoFirebase(CFG) : null;
+    if (banco) {
+      const evs = await banco.listarEventosPublicos();
+      if (evs.length) {
+        eventos = evs.map((e) => ({ ...e, itens: null, fonte: "banco" })).sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+        precosGlobais = (await banco.lerPrecos()) || {};
+      }
+    }
+  } catch (err) { console.warn("Firestore indisponível, usando catálogo estático", err); }
+  // 2) catálogo gerado a partir do Drive (ferramentas/sincronizar_loja.py)
+  if (!eventos.length) try {
     const r = await fetch("data/catalogo.json", { cache: "no-cache" });
     if (r.ok) {
       const c = await r.json();
@@ -34,7 +48,7 @@ async function carregar() {
       precosGlobais = c.precos || {};
     }
   } catch {}
-  // 2) sem catálogo: mostra a demonstração
+  // 3) sem catálogo: mostra a demonstração
   if (!eventos.length) { eventos = window.LOJA_DEMO; demo = true; }
   if (!REAL) {
     $("#aviso-demo").hidden = false;
@@ -58,17 +72,29 @@ function telaEventos() {
       <div class="evento-card__info">
         <span>${esc(fmtData(e.data))} · ${esc(e.local || "")}</span>
         <strong>${esc(e.nome)}</strong>
-        <small>${e.itens.filter((i) => i.tipo === "foto").length} fotos${contarVideos(e)}${e.times?.length ? " · " + esc(e.times.join(", ")) : ""}</small>
+        <small>${contar(e, "foto")} fotos${contarVideos(e)}${e.times?.length ? " · " + esc(e.times.join(", ")) : ""}</small>
       </div>
     </a>`).join("");
   $("#eventos-vazio").hidden = lista.length > 0;
 }
-const contarVideos = (e) => { const n = e.itens.filter((i) => i.tipo === "video").length; return n ? ` · ${n} vídeos` : ""; };
+const contar = (e, tipo) => (e.itens ? e.itens.filter((i) => i.tipo === tipo).length : (e.contagem?.[tipo === "foto" ? "fotos" : "videos"] || 0));
+const contarVideos = (e) => { const n = contar(e, "video"); return n ? ` · ${n} vídeos` : ""; };
 
 /* ---------- Tela: evento ---------- */
-function abrirEvento(id) {
+async function abrirEvento(id) {
   atual = eventos.find((e) => e.id === id);
+  // galeria privada: não aparece na lista, mas abre pelo link
+  if (!atual && banco) {
+    try { const ev = await banco.lerEvento(id); if (ev && ev.publico) { atual = { ...ev, itens: null, fonte: "banco" }; eventos.push(atual); } } catch {}
+  }
   if (!atual) return (location.hash = "");
+  if (!atual.itens) {
+    mostrar("tela-evento");
+    $("#ev-nome").textContent = atual.nome;
+    $("#lista-itens").innerHTML = `<p class="loja__vazio">Carregando fotos…</p>`;
+    const its = await banco.listarItens(atual.id);
+    atual.itens = its.map((i) => ({ ...i, previa: i.thumb }));
+  }
   filtro.time = filtro.atleta = filtro.tipo = "";
   mostrar("tela-evento");
   $("#ev-nome").textContent = atual.nome;
@@ -101,7 +127,7 @@ function renderEvento() {
   $("#ev-contagem").textContent = `${lista.length} ${lista.length === 1 ? "item" : "itens"}`;
   $("#lista-itens").innerHTML = lista.map((i) => `
     <figure class="item ${cobertos.has(i.id) ? "is-coberto" : sel.has(i.id) ? "is-sel" : ""}" data-id="${esc(i.id)}">
-      ${i.tipo === "video"
+      ${i.tipo === "video" && !String(i.previa).startsWith("data:image")
         ? `<video src="${esc(i.previa)}" muted loop playsinline preload="metadata"></video>`
         : `<img src="${esc(i.previa)}" alt="${esc(i.titulo || "")}" loading="lazy" decoding="async">`}
       <button class="item__sel" aria-label="Selecionar ${esc(i.titulo || "")}"></button>
@@ -225,10 +251,22 @@ async function pagar(e) {
       ...carrinho.pacotes.map((p) => `• ${p.rotulo} (${nomeEv(p.evento)})`),
       ...carrinho.itens.filter((i) => !cob.has(i.id)).map((i) => `• ${i.tipo === "video" ? "Vídeo" : "Foto"} ${i.titulo} (${nomeEv(i.evento)})`),
     ];
-    const texto = `Olá, Artur! Quero comprar pela loja do site:\n\n${linhas.join("\n")}\n\nTotal: ${brl(r.total)}\nNome: ${nome}\nE-mail: ${email}`;
     const wa = (window.SITE_CONFIG || {}).whatsapp;
     if (!wa) { msg.textContent = "WhatsApp não configurado."; return; }
-    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+    const janela = window.open("", "_blank"); // abre já no clique para o navegador não bloquear
+    let codigo = "";
+    if (banco && eventos.some((e) => e.fonte === "banco")) {
+      try {
+        codigo = await banco.criarPedido({
+          nome: nome.slice(0, 120), email: email.slice(0, 200), total: r.total, origem: "whatsapp",
+          itens: carrinho.itens.filter((i) => !cob.has(i.id)).slice(0, 300).map((i) => ({ evento: i.evento, id: i.id, tipo: i.tipo, titulo: String(i.titulo || "").slice(0, 120), eventoNome: nomeEv(i.evento) })),
+          pacotes: carrinho.pacotes.slice(0, 20).map((p) => ({ evento: p.evento, rotulo: p.rotulo, itens: p.itens.slice(0, 300) })),
+        });
+      } catch (err) { console.warn("Pedido não registrado", err); }
+    }
+    const texto = `Olá, Artur! Quero comprar pela loja do site:\n\n${linhas.join("\n")}\n\nTotal: ${brl(r.total)}\nNome: ${nome}\nE-mail: ${email}${codigo ? `\nPedido: ${codigo.slice(0, 8).toUpperCase()}` : ""}`;
+    const url = `https://wa.me/${wa}?text=${encodeURIComponent(texto)}`;
+    if (janela) janela.location.href = url; else location.href = url;
     msg.textContent = "Pedido aberto no WhatsApp. É só enviar a mensagem!";
     return;
   }
@@ -288,9 +326,16 @@ function rota() {
 }
 
 /* ---------- Visualizar ---------- */
-function ampliar(id) {
+async function ampliar(id) {
   const it = atual.itens.find((x) => x.id === id);
-  $("#lb-stage").innerHTML = it.tipo === "video" ? `<video src="${esc(it.previa)}" controls autoplay playsinline style="max-width:100%;max-height:100%"></video>` : `<img src="${esc(it.previa)}" alt="">`;
+  let src = it.previa;
+  if (atual.fonte === "banco" && it.temPrevia) {
+    $("#lb-stage").innerHTML = `<p class="loja__vazio">Carregando…</p>`;
+    $("#lb").classList.add("is-open");
+    try { src = (it.previaGrande ||= await banco.lerPrevia(id)) || it.previa; } catch {}
+  }
+  const ehVideo = it.tipo === "video" && !String(src).startsWith("data:image");
+  $("#lb-stage").innerHTML = ehVideo ? `<video src="${esc(src)}" controls autoplay muted loop playsinline style="max-width:100%;max-height:100%"></video>` : `<img src="${esc(src)}" alt="">`;
   $("#lb-cap").textContent = [it.titulo, it.atleta, it.time].filter(Boolean).join(" · ");
   $("#lb").classList.add("is-open"); $("#lb").setAttribute("aria-hidden", "false");
 }
