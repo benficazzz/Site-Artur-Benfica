@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estúdio Benfica · Fotografia, Vídeo & Marketing</title>
+  <meta name="description" content="Fotografia, vídeo e marketing digital para pessoas e empresas: casamentos, aniversários, esportes, produção audiovisual, edição e tráfego pago." />
+  <meta name="theme-color" content="#07080b" />
+  <meta property="og:title" content="Estúdio Benfica · Fotografia, Vídeo & Marketing" />
+  <meta property="og:image" content="assets/logo/png/capa-1920x1080.png" />
+  <link rel="icon" href="assets/logo/svg/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/logo/png/favicon-32.png" sizes="32x32" />
+  <link rel="apple-touch-icon" href="assets/logo/png/favicon-180.png" />
+  <meta property="og:description" content="Imagens que contam histórias e estratégias que trazem resultado." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Preloader -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__inner">
+      <span class="loader__brand"><svg class="loader__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path class="play" d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg></span>
+      <div class="loader__bar"><span></span></div>
+    </div>
+  </div>
+
+  <!-- Cursor personalizado (somente desktop) -->
+  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+  <!-- Barra de progresso de rolagem -->
+  <div class="progress" aria-hidden="true"></div>
+
+  <!-- Trilho lateral de rolagem (índice das seções) -->
+  <nav class="rail" aria-label="Índice das seções">
+    <div class="rail__track" aria-hidden="true"><span class="rail__fill"></span></div>
+    <ol class="rail__list">
+      <li><a href="#inicio" data-label="Início"><b>00</b></a></li>
+      <li><a href="#sobre" data-label="Sobre"><b>01</b></a></li>
+      <li><a href="#servicos" data-label="Serviços"><b>02</b></a></li>
+      <li><a href="#portfolio" data-label="Portfólio"><b>03</b></a></li>
+      <li><a href="#showreel" data-label="Showreel"><b>04</b></a></li>
+      <li><a href="#cases" data-label="Marketing"><b>05</b></a></li>
+      <li><a href="#processo" data-label="Processo"><b>06</b></a></li>
+      <li><a href="#contato" data-label="Contato"><b>07</b></a></li>
+    </ol>
+    <span class="rail__pct" aria-hidden="true">000%</span>
+  </nav>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <a href="#inicio" class="logo" aria-label="Estúdio Benfica, início">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path class="play" d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg>
+      <span class="logo__text"><small>ESTÚDIO</small>BENFICA</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#portfolio">Portfólio</a>
+      <a href="#showreel">Showreel</a>
+      <a href="#processo">Como funciona</a>
+      <a href="#contato" class="btn btn--small btn--lime magnetic">Orçamento</a>
+    </nav>
+    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Menu mobile -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="Menu mobile">
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#portfolio">Portfólio</a>
+      <a href="#showreel">Showreel</a>
+      <a href="#processo">Como funciona</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="orbit" aria-hidden="true">
+        <span class="ring r1"></span><span class="ring r2"></span><span class="ring r3"></span><span class="ring r4"></span>
+        <!-- TROCAR: cada .chip pode receber uma miniatura real: <img src="assets/img/mini-01.jpg" alt=""> -->
+        <span class="chip c1">Casamento</span>
+        <span class="chip c2">Futebol</span>
+        <span class="chip c3">Vídeo</span>
+        <span class="chip c4">Aniversário</span>
+        <span class="chip c5">Ads</span>
+        <span class="chip c6">Social</span>
+      </div>
+      <div class="hero__glow hero__glow--blue" aria-hidden="true"></div>
+      <div class="hero__glow hero__glow--lime" aria-hidden="true"></div>
+
+      <div class="container hero__content">
+        <p class="eyebrow reveal"><span class="dot"></span> Fotografia · Vídeo · Marketing digital</p>
+        <h1 class="hero__title">
+          <span class="line"><span class="split">Imagens que</span></span>
+          <span class="line"><span class="split">contam <em class="accent">histórias.</em></span></span>
+          <span class="line"><span class="split">Estratégia que</span></span>
+          <span class="line"><span class="split">traz <em class="accent accent--blue">resultado.</em></span></span>
+        </h1>
+        <p class="hero__sub reveal">
+          Eu sou o Artur. Registro momentos que importam e ajudo marcas, das pequenas às grandes,
+          a serem vistas por quem realmente interessa:
+          <span class="rotator" aria-live="polite"><span class="rotator__word">fotografia</span></span>
+        </p>
+        <div class="hero__actions reveal">
+          <a href="#portfolio" class="btn btn--lime magnetic">Ver portfólio</a>
+          <a href="#contato" class="btn btn--ghost magnetic">Pedir orçamento</a>
+        </div>
+      </div>
+
+      <a href="#sobre" class="scroll-hint" aria-label="Rolar para baixo">
+        <span class="scroll-hint__mouse"><span></span></span>
+        <span>role</span>
+      </a>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Casamentos</span><i>✦</i><span>Aniversários</span><i>✦</i><span>Futebol</span><i>✦</i><span>Produção de vídeo</span><i>✦</i><span>Edição</span><i>✦</i><span>Marketing digital</span><i>✦</i><span>Tráfego pago</span><i>✦</i>
+        <span>Casamentos</span><i>✦</i><span>Aniversários</span><i>✦</i><span>Futebol</span><i>✦</i><span>Produção de vídeo</span><i>✦</i><span>Edição</span><i>✦</i><span>Marketing digital</span><i>✦</i><span>Tráfego pago</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- SOBRE -->
+    <section class="section about" id="sobre">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container about__grid">
+        <div class="about__media reveal">
+          <!-- TROCAR: coloque sua foto em assets/img/artur.jpg e substitua o bloco abaixo por
+               <img src="assets/img/artur.jpg" alt="Artur Benfica" loading="lazy"> -->
+          <div class="placeholder placeholder--portrait tilt" data-cursor="Olá!">
+            <span class="placeholder__icon">◎</span>
+            <span class="placeholder__label">Sua foto aqui</span>
+          </div>
+          <div class="about__badge">
+            <span>Foto</span><span>Vídeo</span><span>Marketing</span>
+          </div>
+        </div>
+        <div class="about__text">
+          <p class="eyebrow hud reveal"><span class="dot"></span> 01 / Sobre mim</p>
+          <h2 class="section__title reveal">Um olhar de fotógrafo com cabeça de <em class="accent">marketing</em>.</h2>
+          <p class="reveal">
+            Sou fotógrafo, videomaker e profissional de marketing. Unir essas três áreas me permite
+            entregar mais do que imagens bonitas: entrego conteúdo pensado para emocionar,
+            comunicar e gerar resultado.
+          </p>
+          <p class="reveal">
+            Do grande dia de um casal à partida de futebol, do aniversário em família à campanha
+            de uma empresa, meu trabalho é captar o que realmente importa e transformar isso em
+            algo que as pessoas queiram ver e compartilhar.
+          </p>
+          <ul class="pills reveal">
+            <li>Fotografia de eventos</li>
+            <li>Filmagem & edição</li>
+            <li>Social media</li>
+            <li>Tráfego pago</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVIÇOS -->
+    <section class="section services" id="servicos">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow hud reveal"><span class="dot"></span> 02 / Serviços</p>
+          <h2 class="section__title reveal">O que posso fazer <em class="accent">por você</em>.</h2>
+        </div>
+
+        <div class="services__grid">
+          <article class="card reveal tilt">
+            <span class="card__num">01</span>
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="26" rx="5"/><circle cx="24" cy="27" r="7"/><path d="M17 14l3-6h8l3 6"/></svg>
+            </div>
+            <h3>Fotografia de eventos</h3>
+            <p>Casamentos, aniversários, ensaios e celebrações registrados com naturalidade e sensibilidade.</p>
+            <ul><li>Casamentos</li><li>Aniversários</li><li>Ensaios</li></ul>
+          </article>
+
+          <article class="card reveal tilt">
+            <span class="card__num">02</span>
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M24 7v8M24 33v8M7 24h8M33 24h8M24 18l6 4-2 7h-8l-2-7z"/></svg>
+            </div>
+            <h3>Esporte & futebol</h3>
+            <p>Cobertura de jogos e campeonatos com imagens de ação, emoção e bastidores.</p>
+            <ul><li>Jogos</li><li>Campeonatos</li><li>Times & atletas</li></ul>
+          </article>
+
+          <article class="card reveal tilt">
+            <span class="card__num">03</span>
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><rect x="5" y="13" width="28" height="22" rx="4"/><path d="M33 21l10-6v18l-10-6z"/></svg>
+            </div>
+            <h3>Produção de vídeo & edição</h3>
+            <p>Filmagem, roteiro e edição para eventos, empresas e redes sociais, do bruto ao vídeo final.</p>
+            <ul><li>Filmagem</li><li>Edição</li><li>Reels & vídeos curtos</li></ul>
+          </article>
+
+          <article class="card reveal tilt">
+            <span class="card__num">04</span>
+            <div class="card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><path d="M6 40V8M6 40h36"/><path d="M12 32l9-10 7 6 12-14"/><path d="M34 14h6v6"/></svg>
+            </div>
+            <h3>Marketing digital & tráfego pago</h3>
+            <p>Estratégia, conteúdo e anúncios para pequenos e grandes negócios atraírem os clientes certos.</p>
+            <ul><li>Estratégia</li><li>Social media</li><li>Anúncios pagos</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PORTFÓLIO -->
+    <section class="section portfolio" id="portfolio">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container">
+        <div class="section__head section__head--row">
+          <div>
+            <p class="eyebrow hud reveal"><span class="dot"></span> 03 / Portfólio</p>
+            <h2 class="section__title reveal">Trabalhos <em class="accent">recentes</em>.</h2>
+          </div>
+          <div class="filters reveal" role="tablist" aria-label="Filtrar portfólio">
+            <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">Todos</button>
+            <button class="filter" data-filter="casamento" role="tab" aria-selected="false">Casamentos</button>
+            <button class="filter" data-filter="aniversario" role="tab" aria-selected="false">Aniversários</button>
+            <button class="filter" data-filter="formatura" role="tab" aria-selected="false">Formaturas</button>
+            <button class="filter" data-filter="futebol" role="tab" aria-selected="false">Futebol & futsal</button>
+            <button class="filter" data-filter="empresa" role="tab" aria-selected="false">Empresas</button>
+          </div>
+        </div>
+
+        <!-- Para adicionar fotos: copie um <figure class="work"> e troque data-cat, imagem e textos.
+             Categorias: casamento, aniversario, formatura, futebol, empresa. Filtros sem foto ficam ocultos. -->
+        <div class="gallery">
+          <figure class="work work--wide" data-cat="futebol" data-title="Guerreiros BDI · Campeões" data-cursor="Ver">
+            <img src="assets/img/portfolio/copa-prime-campeoes.webp" alt="Elenco do Guerreiros BDI comemorando o título com o troféu sob a faixa do time" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Guerreiros BDI · Campeões</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Hora do parabéns" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-bolo-princesa.webp" alt="Menina com coroa de princesa soprando a vela de 5 anos" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Hora do parabéns</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-01.webp" alt="Formanda de beca segurando o canudo azul em direção à câmera" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Concentração" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-concentracao.webp" alt="Jogador do Cassino FC concentrado na roda do time" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Concentração</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Mesa dos 15 anos" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-15-anos-mesa.webp" alt="Mesa decorada em tons de azul com tema do fundo do mar e o número 15 em neon" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Mesa dos 15 anos</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Campo do Alterosa" data-cursor="Ver">
+            <img src="assets/img/portfolio/campo-alterosa-disputa.webp" alt="Disputa de bola em campo de terra com poeira levantando" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Campo do Alterosa</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="futebol" data-title="Cassino FC · Open Futsal" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-time.webp" alt="Elenco do Cassino FC posado em quadra antes do jogo" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Cassino FC · Open Futsal</strong></figcaption>
+          </figure>
+          <figure class="work" data-cat="aniversario" data-title="15 anos" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-15-anos.webp" alt="Aniversariante de 15 anos abraçada à mãe ao lado do bolo azul" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>15 anos</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-03.webp" alt="Formando de óculos e beca segurando o canudo azul" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Lazio MTR · Comemoração" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-lazio-comemoracao.webp" alt="Jogador do Lazio MTR comemorando gol com gesto de silêncio" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Lazio MTR · Comemoração</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Parabéns em família" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-princesa-aplausos.webp" alt="Aniversariante vestida de princesa aplaudindo cercada pela família" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Parabéns em família</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="futebol" data-title="Condução de bola" data-cursor="Ver">
+            <img src="assets/img/portfolio/campo-alterosa-conducao.webp" alt="Jogador de camisa listrada azul conduzindo a bola no campo de terra" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Condução de bola</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Copa Prime Arena 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/copa-prime-trofeu.webp" alt="Jogador campeão sorrindo com a filha nos ombros ao lado do troféu" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Copa Prime Arena 2026</strong></figcaption>
+          </figure>
+          <figure class="work" data-cat="aniversario" data-title="15 anos em família" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-15-anos-avo.webp" alt="Aniversariante de 15 anos abraçada ao avô ao lado do bolo" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>15 anos em família</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Camisa 7" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-chute.webp" alt="Jogador do Cassino FC de costas preparando o chute na quadra" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Camisa 7</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-02.webp" alt="Formando de beca estendendo o canudo azul" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="futebol" data-title="Duelo no terrão" data-cursor="Ver">
+            <img src="assets/img/portfolio/campo-alterosa-duelo.webp" alt="Dois jogadores disputando a bola no campo de terra" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Duelo no terrão</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="aniversario" data-title="Emoção da mãe" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-mae-emocionada.webp" alt="Mãe emocionada de olhos fechados durante o parabéns" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Emoção da mãe</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="futebol" data-title="Guerreiros BDI · Medalhistas" data-cursor="Ver">
+            <img src="assets/img/portfolio/copa-prime-quarteto.webp" alt="Quatro jogadores do Guerreiros BDI posando com as medalhas da Copa Prime Arena 2026" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Guerreiros BDI · Medalhistas</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Drible em quadra" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-drible.webp" alt="Jogador do Cassino FC conduzindo a bola em lance de futsal" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Drible em quadra</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-04.webp" alt="Formando de beca segurando o canudo com as duas mãos" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Festa na piscina" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-piscina.webp" alt="Convidados comemorando enquanto a água espirra na piscina" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Festa na piscina</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Gol do Lazio MTR" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-lazio-gol.webp" alt="Jogadores do Lazio MTR comemorando juntos apontando para a câmera" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Gol do Lazio MTR</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Detalhe de beira de campo" data-cursor="Ver">
+            <img src="assets/img/portfolio/campo-alterosa-chuteira.webp" alt="Chuteira azul em destaque ao lado de um copo na beira do campo" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Detalhe de beira de campo</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="futebol" data-title="IBK Futebol Clube" data-cursor="Ver">
+            <img src="assets/img/portfolio/copa-prime-ibk.webp" alt="Elenco do IBK Futebol Clube posado com o troféu sob a faixa do time" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>IBK Futebol Clube</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-05.webp" alt="Retrato de formando de braços cruzados com desfoque artístico" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Condução no futsal" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-conducao.webp" alt="Jogador do Cassino FC conduzindo a bola na quadra à noite" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Condução no futsal</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Hora das medalhas" data-cursor="Ver">
+            <img src="assets/img/portfolio/copa-prime-medalhas.webp" alt="Jogador recebendo várias medalhas da Copa Prime Arena 2026" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Hora das medalhas</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="aniversario" data-title="Detalhes da decoração" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-decoracao.webp" alt="Arranjo de lírios azuis e brancos na mesa da festa" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Detalhes da decoração</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Resenha em campo" data-cursor="Ver">
+            <img src="assets/img/portfolio/campo-alterosa-retrato.webp" alt="Jogador de camisa listrada azul sorrindo durante a partida" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Resenha em campo</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Abraço do gol" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-lazio-abraco.webp" alt="Jogadores do Lazio MTR se abraçando após o gol" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Abraço do gol</strong></figcaption>
+          </figure>
+        </div>
+        <div class="gallery__more"><button class="btn btn--ghost magnetic" id="gallery-more">Ver mais fotos</button></div>
+      </div>
+    </section>
+
+    <!-- SHOWREEL -->
+    <section class="section showreel" id="showreel">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow hud reveal"><span class="dot"></span> 04 / Showreel</p>
+          <h2 class="section__title reveal">Em <em class="accent">movimento</em>.</h2>
+        </div>
+        <!-- TROCAR: substitua data-video pelo link de incorporação do seu vídeo
+             (ex.: https://www.youtube.com/embed/ID_DO_VIDEO ou https://player.vimeo.com/video/ID). -->
+        <div class="reel reveal" data-video="" data-cursor="Play">
+          <div class="reel__frame">
+            <div class="reel__bg" aria-hidden="true"></div>
+            <button class="reel__play magnetic" aria-label="Assistir showreel">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <p class="reel__hint">Seu showreel aparece aqui</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARKETING / CASES -->
+    <section class="section cases" id="cases">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container cases__grid">
+        <div>
+          <p class="eyebrow hud reveal"><span class="dot"></span> 05 / Marketing para negócios</p>
+          <h2 class="section__title reveal">Do pequeno comércio à <em class="accent accent--blue">grande empresa</em>.</h2>
+          <p class="reveal">
+            Imagem boa sozinha não vende. Por isso, combino produção de conteúdo com estratégia
+            e tráfego pago para colocar sua marca na frente das pessoas certas, na hora certa.
+          </p>
+          <a href="#contato" class="btn btn--blue magnetic reveal">Quero crescer meu negócio</a>
+        </div>
+        <ol class="steps-list">
+          <li class="reveal"><span>Diagnóstico</span>Entendo seu negócio, seu público e seus objetivos.</li>
+          <li class="reveal"><span>Conteúdo</span>Fotos e vídeos profissionais que mostram o seu valor.</li>
+          <li class="reveal"><span>Anúncios</span>Campanhas de tráfego pago com foco em resultado.</li>
+          <li class="reveal"><span>Análise</span>Acompanhamento e ajustes contínuos para melhorar sempre.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PROCESSO -->
+    <section class="section process" id="processo">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="container">
+        <div class="section__head">
+          <p class="eyebrow hud reveal"><span class="dot"></span> 06 / Como funciona</p>
+          <h2 class="section__title reveal">Simples, do primeiro <em class="accent">oi</em> à entrega.</h2>
+        </div>
+        <div class="process__line" aria-hidden="true"><span></span></div>
+        <div class="process__grid">
+          <div class="step reveal"><b>1</b><h3>Conversa</h3><p>Você me conta o que precisa pelo WhatsApp ou formulário.</p></div>
+          <div class="step reveal"><b>2</b><h3>Proposta</h3><p>Monto um orçamento claro, sob medida para você.</p></div>
+          <div class="step reveal"><b>3</b><h3>Produção</h3><p>Fotografo, filmo ou executo a estratégia combinada.</p></div>
+          <div class="step reveal"><b>4</b><h3>Entrega</h3><p>Material tratado e entregue no prazo, pronto para usar.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="section contact" id="contato">
+      <span class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <div class="contact__glow" aria-hidden="true"></div>
+      <div class="container contact__grid">
+        <div>
+          <p class="eyebrow hud reveal"><span class="dot"></span> 07 / Contato</p>
+          <h2 class="contact__title reveal">Vamos criar algo <em class="accent">incrível</em> juntos?</h2>
+          <p class="reveal">Conte rapidinho o que você precisa. Eu respondo pelo WhatsApp.</p>
+          <ul class="contact__links reveal">
+            <!-- TROCAR: atualize seus links reais -->
+            <li><a href="#" data-whatsapp class="link-arrow">WhatsApp · (31) 99226-4733</a></li>
+            <li><a href="https://www.instagram.com/benfica.estudio/" target="_blank" rel="noopener" class="link-arrow">Instagram · @benfica.estudio</a></li>
+            <li><a href="mailto:arturbenfica5@gmail.com" class="link-arrow">arturbenfica5@gmail.com</a></li>
+          </ul>
+        </div>
+
+        <form class="form reveal" id="contact-form" novalidate>
+          <div class="field">
+            <input type="text" id="f-name" name="nome" placeholder=" " required autocomplete="name" />
+            <label for="f-name">Seu nome</label>
+          </div>
+          <div class="field">
+            <select id="f-service" name="servico" required>
+              <option value="" disabled selected hidden></option>
+              <option>Casamento</option>
+              <option>Aniversário</option>
+              <option>Futebol / esporte</option>
+              <option>Vídeo / edição</option>
+              <option>Marketing digital</option>
+              <option>Tráfego pago</option>
+              <option>Outro</option>
+            </select>
+            <label for="f-service">Serviço</label>
+          </div>
+          <div class="field">
+            <textarea id="f-msg" name="mensagem" rows="4" placeholder=" " required></textarea>
+            <label for="f-msg">Conte um pouco sobre o projeto</label>
+          </div>
+          <button type="submit" class="btn btn--lime btn--block magnetic">Enviar pelo WhatsApp</button>
+          <p class="form__note" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span class="footer__big" aria-hidden="true">ESTÚDIO BENFICA</span>
+      <div class="footer__row">
+        <span>© <span id="year"></span> Estúdio Benfica · Artur Benfica. Todos os direitos reservados.</span>
+        <a href="#inicio" class="link-arrow link-arrow--up">Voltar ao topo</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a href="#" class="wa-float magnetic" data-whatsapp aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.5-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>
+  </a>
+
+  <!-- Lightbox -->
+  <div class="lightbox" aria-hidden="true" role="dialog" aria-label="Visualização do trabalho">
+    <button class="lightbox__close" aria-label="Fechar">×</button>
+    <button class="lightbox__nav lightbox__prev" aria-label="Anterior">‹</button>
+    <div class="lightbox__stage"></div>
+    <button class="lightbox__nav lightbox__next" aria-label="Próximo">›</button>
+    <p class="lightbox__caption"></p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
