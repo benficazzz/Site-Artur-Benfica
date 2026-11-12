@@ -64,6 +64,13 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Loja lançada: `mostrarLoja: true` em `js/config.js` (links com `data-loja`); `noindex` removido de `loja.html`. Para esconder de novo, volte para `false`
 - Hook só para testes: `window.FIREBASE_EMULADOR` (nunca definido no site)
 
+## Área do cliente (Minha conta)
+- `conta.html` + `js/conta.js` + `css/conta.css`. Login Google ou e-mail/senha (exige e-mail confirmado)
+- Conta do Artur → redireciona para `admin.html`. Cliente → lista `pedidos` onde `email` == e-mail do login (regra `donoDoPedido`)
+- Download pela conta: Worker `POST /acessoConta` (verifica o ID token do Firebase) → token de 24 h → `/baixar`. Pela conta não há prazo; pelo link do checkout, 30 dias
+- E-mails dos pedidos são gravados em minúsculas. Pedidos do WhatsApp (sem `linhas`) também funcionam
+- Testes: 31 regras no emulador, 27 verificações no Worker, página no computador e iPhone
+
 ## Fluxo de trabalho
 - Testar com Playwright (Chromium já instalado), no computador e no iPhone 13, sem rolagem horizontal
 - Publicar a prévia no Artifact

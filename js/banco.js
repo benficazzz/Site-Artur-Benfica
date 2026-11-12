@@ -111,12 +111,31 @@ export async function criarBancoFirebase(config) {
 
   return {
     modo: "firebase",
-    aoMudarLogin: (fn) => au.onAuthStateChanged(auth, (u) => fn(u ? { email: u.email, nome: u.displayName, foto: u.photoURL, admin: u.email === ADMIN_EMAIL && u.emailVerified } : null)),
+    aoMudarLogin: (fn) => au.onAuthStateChanged(auth, (u) => fn(u ? { email: (u.email || "").toLowerCase(), nome: u.displayName, foto: u.photoURL, verificado: u.emailVerified, admin: (u.email || "").toLowerCase() === ADMIN_EMAIL && u.emailVerified } : null)),
     async entrar() {
       if (window.FIREBASE_EMULADOR?.contaTeste) return au.signInWithCredential(auth, au.GoogleAuthProvider.credential(JSON.stringify(window.FIREBASE_EMULADOR.contaTeste)));
       guardarToken(await au.signInWithPopup(auth, provedor));
     },
     sair: () => { try { sessionStorage.removeItem(TOK); } catch {} return au.signOut(auth); },
+
+    /* ---- área do cliente ---- */
+    async entrarCliente() {
+      if (window.FIREBASE_EMULADOR?.contaTeste) return au.signInWithCredential(auth, au.GoogleAuthProvider.credential(JSON.stringify(window.FIREBASE_EMULADOR.contaTeste)));
+      const p = new au.GoogleAuthProvider(); p.setCustomParameters({ prompt: "select_account" });
+      return au.signInWithPopup(auth, p);
+    },
+    entrarEmail: (email, senha) => au.signInWithEmailAndPassword(auth, email.trim(), senha),
+    async criarContaEmail(nome, email, senha) {
+      const c = await au.createUserWithEmailAndPassword(auth, email.trim(), senha);
+      if (nome) await au.updateProfile(c.user, { displayName: nome });
+      await au.sendEmailVerification(c.user, { url: location.href.split("#")[0] });
+      return c;
+    },
+    reenviarVerificacao: () => au.sendEmailVerification(auth.currentUser, { url: location.href.split("#")[0] }),
+    redefinirSenha: (email) => au.sendPasswordResetEmail(auth, email.trim()),
+    recarregarUsuario: async () => { await auth.currentUser?.reload(); await auth.currentUser?.getIdToken(true); return auth.currentUser?.emailVerified; },
+    tokenId: () => auth.currentUser?.getIdToken(),
+    listarMeusPedidos: (email) => lista(fs.query(col("pedidos"), fs.where("email", "==", email.toLowerCase()))),
 
     listarEventos: () => lista(fs.query(col("eventos"), fs.orderBy("data", "desc"))),
     salvarEvento: (ev) => fs.setDoc(doc("eventos", ev.id), { ...ev, atualizadoEm: fs.serverTimestamp() }, { merge: true }),
@@ -153,7 +172,7 @@ export async function criarBancoFirebase(config) {
       return `https://drive.google.com/file/d/${driveId}/view`;
     },
     // usado pela loja (visitante, sem login)
-    async criarPedido(p) { const r = await fs.addDoc(col("pedidos"), { ...p, status: "novo", criadoEm: fs.serverTimestamp() }); return r.id; },
+    async criarPedido(p) { const r = await fs.addDoc(col("pedidos"), { ...p, email: String(p.email || "").toLowerCase(), status: "novo", criadoEm: fs.serverTimestamp() }); return r.id; },
     listarEventosPublicos: () => lista(fs.query(col("eventos"), fs.where("publico", "==", true), fs.where("privado", "==", false))),
     lerEvento: async (id) => { const s = await fs.getDoc(doc("eventos", id)); return s.exists() ? { id: s.id, ...s.data() } : null; },
   };
@@ -173,6 +192,14 @@ export function criarBancoTeste() {
     aoMudarLogin(fn) { ouvinte = fn; fn(usuario); },
     async entrar() { usuario = { email: ADMIN_EMAIL, nome: "Artur (teste)", admin: true }; ouvinte?.(usuario); },
     async sair() { usuario = null; ouvinte?.(null); },
+    async entrarCliente() { usuario = { email: "cliente@teste.com", nome: "Cliente (teste)", verificado: true, admin: false }; ouvinte?.(usuario); },
+    async entrarEmail(email) { usuario = { email: email.toLowerCase(), nome: email, verificado: true, admin: email.toLowerCase() === ADMIN_EMAIL }; ouvinte?.(usuario); },
+    async criarContaEmail(nome, email) { usuario = { email: email.toLowerCase(), nome, verificado: false, admin: false }; ouvinte?.(usuario); },
+    async reenviarVerificacao() {},
+    async redefinirSenha() {},
+    async recarregarUsuario() { if (usuario) usuario.verificado = true; ouvinte?.(usuario); return true; },
+    tokenId: async () => "token-teste",
+    listarMeusPedidos: async (email) => Object.values(d.pedidos).filter((p) => (p.email || "").toLowerCase() === email.toLowerCase()),
     listarEventos: async () => espera(Object.values(d.eventos).sort((a, b) => (b.data || "").localeCompare(a.data || ""))),
     async salvarEvento(ev) { d.eventos[ev.id] = { ...d.eventos[ev.id], ...ev }; gravar(); },
     async apagarEvento(id) { Object.values(d.itens).filter((i) => i.evento === id).forEach((i) => { delete d.itens[i.id]; delete d.previas[i.id]; delete d.originais[i.id]; }); delete d.eventos[id]; gravar(); },

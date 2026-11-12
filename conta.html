@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minha conta · Estúdio Benfica</title>
+  <meta name="description" content="Entre para acessar e baixar as fotos e vídeos que você comprou no Estúdio Benfica." />
+  <meta name="theme-color" content="#07080b" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="assets/logo/svg/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/logo/png/favicon-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/loja.css" />
+  <link rel="stylesheet" href="css/conta.css" />
+</head>
+<body class="loja is-ready">
+  <header class="header is-scrolled">
+    <a href="index.html" class="logo" aria-label="Estúdio Benfica, página inicial">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path class="play" d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg>
+      <span class="logo__text"><small>ESTÚDIO</small>BENFICA</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html#portfolio">Portfólio</a>
+      <a href="loja.html">Loja</a>
+      <a href="conta.html" class="is-active">Minha conta</a>
+    </nav>
+    <a href="loja.html" class="loja__voltar">← Loja</a>
+  </header>
+
+  <main class="container conta">
+    <!-- Carregando -->
+    <section id="tela-carregando" class="conta__centro"><p class="loja__vazio">Carregando…</p></section>
+
+    <!-- Entrar / criar conta -->
+    <section id="tela-entrar" class="conta__centro" hidden>
+      <div class="conta__card">
+        <p class="eyebrow hud"><span class="dot"></span> Minha conta</p>
+        <h1 id="ent-titulo">Entrar</h1>
+        <p class="conta__sub">Acesse as fotos e vídeos que você comprou. Use o <b>mesmo e-mail</b> que você informou na compra.</p>
+
+        <button class="btn btn--lime btn--block" id="ent-google">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>
+          Continuar com Google
+        </button>
+
+        <div class="conta__ou"><span>ou com e-mail</span></div>
+
+        <form id="form-email" novalidate>
+          <div class="field" id="campo-nome" hidden><input id="e-nome" placeholder=" " autocomplete="name" maxlength="80"><label for="e-nome">Seu nome</label></div>
+          <div class="field"><input id="e-email" type="email" placeholder=" " autocomplete="email" required><label for="e-email">E-mail</label></div>
+          <div class="field"><input id="e-senha" type="password" placeholder=" " autocomplete="current-password" required minlength="6"><label for="e-senha">Senha</label></div>
+          <button class="btn btn--ghost btn--block" type="submit" id="e-enviar">Entrar</button>
+        </form>
+        <p class="conta__links">
+          <button class="loja__link" id="alternar">Não tem conta? Criar conta</button>
+          <button class="loja__link" id="esqueci">Esqueci a senha</button>
+        </p>
+        <p class="form__note" id="ent-msg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Confirmar e-mail -->
+    <section id="tela-verificar" class="conta__centro" hidden>
+      <div class="conta__card">
+        <p class="eyebrow hud"><span class="dot"></span> Quase lá</p>
+        <h1>Confirme seu e-mail</h1>
+        <p class="conta__sub">Enviamos um link para <b id="ver-email"></b>. Abra o e-mail, clique no link e volte aqui.</p>
+        <button class="btn btn--lime btn--block" id="ver-pronto">Já confirmei</button>
+        <p class="conta__links"><button class="loja__link" id="ver-reenviar">Reenviar e-mail</button><button class="loja__link" data-sair>Sair</button></p>
+        <p class="form__note" id="ver-msg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Minhas compras -->
+    <section id="tela-compras" hidden>
+      <div class="conta__topo">
+        <div>
+          <p class="eyebrow hud"><span class="dot"></span> Minha conta</p>
+          <h1 class="section__title">Olá, <em class="accent" id="c-nome"></em></h1>
+          <p class="conta__sub">Suas compras feitas com <b id="c-email"></b>.</p>
+        </div>
+        <button class="btn btn--ghost btn--small" data-sair>Sair</button>
+      </div>
+      <div id="compras"></div>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/precos.js"></script>
+  <script type="module" src="js/conta.js"></script>
+</body>
+</html>

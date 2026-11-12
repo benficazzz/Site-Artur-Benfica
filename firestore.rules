@@ -44,9 +44,16 @@ service cloud.firestore {
       allow write: if admin();
     }
 
-    // Pedidos: o visitante só pode CRIAR um pedido novo (sem ler os dos outros)
+    // Pedidos: o visitante só pode CRIAR um pedido novo (sem ler os dos outros).
+    // O cliente logado (e-mail confirmado) lê apenas os pedidos feitos com o e-mail dele.
+    function donoDoPedido() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && resource.data.email == request.auth.token.email.lower();
+    }
     match /pedidos/{pedido} {
-      allow read, update, delete: if admin();
+      allow read: if admin() || donoDoPedido();
+      allow update, delete: if admin();
       allow create: if admin() || (
         request.resource.data.keys().hasOnly(['nome', 'email', 'total', 'origem', 'itens', 'pacotes', 'status', 'criadoEm'])
         && request.resource.data.status == 'novo'
