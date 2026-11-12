@@ -237,8 +237,30 @@
     const f = btn.dataset.filter;
     if (f !== "all" && !works.some((w) => w.dataset.cat === f)) btn.hidden = true;
   });
+  // "Todos" mostra as primeiras fotos; o botão revela o restante
+  const INITIAL = 12;
+  const moreWrap = $(".gallery__more");
+  let expanded = false;
+  const applyCollapse = (filter) => {
+    const collapse = filter === "all" && !expanded;
+    works.forEach((w, i) => w.classList.toggle("is-collapsed", collapse && i >= INITIAL));
+    if (moreWrap) moreWrap.hidden = !(collapse && works.length > INITIAL);
+  };
+  applyCollapse("all");
+  $("#gallery-more")?.addEventListener("click", () => {
+    expanded = true;
+    works.forEach((w, i) => {
+      if (!w.classList.contains("is-collapsed")) return;
+      w.classList.remove("is-collapsed");
+      w.classList.add("is-entering");
+      setTimeout(() => w.classList.remove("is-entering"), 40 + (i - INITIAL) * 40);
+    });
+    moreWrap.hidden = true;
+  });
+
   $$(".filter").forEach((btn) => {
     btn.addEventListener("click", () => {
+      applyCollapse(btn.dataset.filter);
       $$(".filter").forEach((b) => { b.classList.remove("is-active"); b.setAttribute("aria-selected", "false"); });
       btn.classList.add("is-active"); btn.setAttribute("aria-selected", "true");
       const f = btn.dataset.filter;
@@ -260,7 +282,7 @@
   const stage = $(".lightbox__stage");
   const caption = $(".lightbox__caption");
   let current = 0;
-  const visible = () => works.filter((w) => !w.classList.contains("is-hidden"));
+  const visible = () => works.filter((w) => !w.classList.contains("is-hidden") && !w.classList.contains("is-collapsed"));
   const show = (idx) => {
     const list = visible();
     if (!list.length) return;

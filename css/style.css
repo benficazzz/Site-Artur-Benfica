@@ -331,7 +331,9 @@ p { color: #c9cfdb; }
 .work figcaption span { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); }
 .work figcaption strong { font-family: var(--font-display); font-size: 1.15rem; }
 .work:hover figcaption, .work:focus-visible figcaption { transform: none; opacity: 1; }
-.work.is-hidden { display: none; }
+.work.is-hidden, .work.is-collapsed { display: none; }
+.gallery__more { display: flex; justify-content: center; margin-top: 34px; }
+.gallery__more[hidden] { display: none; }
 .work.is-entering { opacity: 0; transform: scale(.94); }
 
 /* ---------- Showreel ---------- */
