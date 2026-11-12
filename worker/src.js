@@ -12,6 +12,9 @@
      GOOGLE_SERVICE_ACCOUNT conteúdo inteiro do arquivo JSON da conta de serviço "loja-servidor"
    Variáveis (texto):
      SITE_URL      https://benficazzz.github.io/Site-Artur-Benfica
+   Aviso de venda no Telegram (opcional):
+     TELEGRAM_TOKEN   (segredo) token do bot criado no @BotFather
+     TELEGRAM_CHAT_ID (texto)   número do seu chat com o bot
    ========================================================= */
 const Precos = globalThis.Precos;
 const PROJETO = "estudio-benfica";
@@ -171,6 +174,22 @@ async function criarPagamento(req, env) {
   return json({ checkout: pref.init_point, pedido: pedidoId });
 }
 
+/* ---------------- aviso de venda (Telegram, opcional) ---------------- */
+const MEIOS = { pix: "Pix", bank_transfer: "Pix", credit_card: "Cartão de crédito", debit_card: "Cartão de débito", ticket: "Boleto", account_money: "Saldo Mercado Pago" };
+async function avisarTelegram(env, texto) {
+  if (!env.TELEGRAM_TOKEN || !env.TELEGRAM_CHAT_ID) return false;
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_TOKEN}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: texto, disable_web_page_preview: true }) });
+    return r.ok;
+  } catch (e) { console.error("Telegram", e); return false; }
+}
+function textoVenda(ref, p, pg) {
+  const n = linhasDe(p).length;
+  const meio = MEIOS[pg.payment_method_id] || MEIOS[pg.payment_type_id] || pg.payment_type_id || "—";
+  return `💰 Venda aprovada!\n\nPedido ${ref.slice(0, 8).toUpperCase()}\nCliente: ${p.nome} (${p.email})\n${n} arquivo(s) · ${Precos.brl(Number(p.total) || 0)}\nPagamento: ${meio}\n\nO cliente já pode baixar. Painel: ${"https://benficazzz.github.io/Site-Artur-Benfica/admin.html#pedidos"}`;
+}
+
 async function webhook(req, env) {
   const u = new URL(req.url);
   const corpo = await req.json().catch(() => ({}));
@@ -188,6 +207,7 @@ async function webhook(req, env) {
   const novo = pg.status === "approved" && Math.abs(Number(pg.transaction_amount) - p.total) < 0.01 && pg.currency_id === "BRL" ? "pago"
     : ["rejected", "cancelled", "refunded", "charged_back"].includes(pg.status) ? "cancelado" : "aguardando";
   await atualizarDoc(env, `pedidos/${ref}`, { status: novo, mpPagamento: String(pg.id), mpStatus: String(pg.status), meio: pg.payment_type_id || null, atualizadoEm: new Date() });
+  if (novo === "pago") await avisarTelegram(env, textoVenda(ref, p, pg));
   return new Response("ok");
 }
 
@@ -280,6 +300,11 @@ export default {
       else if (u.pathname === "/statusPedido") r = await statusPedido(u, env);
       else if (u.pathname === "/acessoConta" && req.method === "POST") r = await acessoConta(req, env);
       else if (u.pathname === "/baixar") r = await baixar(u, env);
+      else if (u.pathname === "/testeAviso") {
+        // teste do aviso: /testeAviso?chat=<TELEGRAM_CHAT_ID>
+        const ok = env.TELEGRAM_CHAT_ID && u.searchParams.get("chat") === String(env.TELEGRAM_CHAT_ID) && await avisarTelegram(env, "✅ Aviso de vendas do Estúdio Benfica ligado! Você vai receber uma mensagem aqui a cada pagamento aprovado.");
+        r = json({ ok: !!ok, ...(ok ? {} : { erro: "Confira TELEGRAM_TOKEN e TELEGRAM_CHAT_ID no Cloudflare e se você já mandou /start para o seu bot." }) }, ok ? 200 : 400);
+      }
       else if (u.pathname === "/") r = json({ ok: true, servico: "Loja Estúdio Benfica" });
       else r = json({ erro: "Rota inexistente" }, 404);
       Object.entries(c).forEach(([k, v]) => r.headers.set(k, v));

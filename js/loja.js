@@ -3,7 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611121919";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;

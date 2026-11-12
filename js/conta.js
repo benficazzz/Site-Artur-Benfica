@@ -4,7 +4,7 @@
    - cliente → vê as compras feitas com o e-mail dele e baixa os originais
    ?teste=1 → modo de treino
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611121919";
 
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));

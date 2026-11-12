@@ -63,3 +63,22 @@ Em `js/firebase-config.js`: `LOJA_API = "<endereço do Worker>"` e `LOJA_ATIVA =
   Se houver fotos enviadas antes, abra o painel e envie qualquer arquivo novo: a pasta é liberada na hora.
 - Taxas e prazo de liberação do dinheiro são os do Mercado Pago para a sua conta.
 - O Worker gratuito aguenta 100 mil requisições por dia.
+
+---
+
+## Aviso de venda no Telegram (opcional)
+A cada pagamento aprovado, o servidor manda uma mensagem para você com o código do pedido, cliente, valor e forma de pagamento.
+
+1. No Telegram, abra o **@BotFather** → envie `/newbot` → escolha um nome (ex.: *Vendas Estúdio Benfica*) e um usuário terminado em `bot`.
+   Ele responde com um **token** (algo como `123456:ABC...`). Não envie esse token por chat.
+2. Abra o seu bot novo e mande **/start** para ele.
+3. No navegador, abra `https://api.telegram.org/bot<SEU_TOKEN>/getUpdates` e procure `"chat":{"id":` — esse número é o seu **chat id**.
+4. No Cloudflare (Worker → Configurações → Variáveis e segredos):
+   | Tipo | Nome | Valor |
+   |---|---|---|
+   | Segredo | `TELEGRAM_TOKEN` | o token do passo 1 |
+   | Texto | `TELEGRAM_CHAT_ID` | o número do passo 3 |
+5. Teste: abra `https://loja-estudio-benfica.arturbenfica5.workers.dev/testeAviso?chat=<SEU_CHAT_ID>` — deve chegar uma mensagem no Telegram.
+
+## Atualizações do site
+Antes de publicar mudanças em CSS/JS, rode `python3 ferramentas/versao.py` (carimba a versão nos arquivos e evita cache antigo).
