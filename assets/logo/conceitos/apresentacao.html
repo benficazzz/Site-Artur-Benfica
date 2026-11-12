@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estúdio Benfica · Conceitos de logo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --black:#07080b; --black2:#11131a; --blue:#2563ff; --white:#f5f7fa; --lime:#c8ff1a; --muted:#8b93a7; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--black); color:var(--white); font-family:Inter, sans-serif; padding:48px 40px 60px; }
+  header { max-width:1240px; margin:0 auto 36px; }
+  header p { margin:0 0 6px; font-family:"Geist Mono", monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--lime); }
+  header h1 { margin:0; font-family:Syne; font-size:40px; letter-spacing:-.03em; }
+  .grid { max-width:1240px; margin:0 auto; display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
+  .card { border:1px solid rgba(255,255,255,.08); border-radius:22px; overflow:hidden; background:var(--black2); }
+  .stage { height:300px; display:grid; place-items:center; }
+  .stage.light { background:var(--white); color:var(--black); }
+  .stage.lime { background:var(--lime); color:var(--black); }
+  .stage.blue { background:var(--blue); }
+  .row { display:grid; grid-template-columns:1fr 1fr 1fr; border-top:1px solid rgba(255,255,255,.08); }
+  .row > div { height:110px; display:grid; place-items:center; }
+  .meta { padding:18px 22px 22px; }
+  .meta b { font-family:"Geist Mono", monospace; font-size:12px; letter-spacing:.14em; color:var(--lime); }
+  .meta h2 { margin:6px 0 6px; font-family:Syne; font-size:22px; }
+  .meta p { margin:0; color:#c3c9d6; font-size:14px; line-height:1.55; }
+  .lockup { display:flex; align-items:center; gap:18px; }
+  .wm { font-family:Syne; font-weight:800; line-height:.92; letter-spacing:-.02em; }
+  .wm small { display:block; font-family:"Geist Mono", monospace; font-weight:500; font-size:.34em; letter-spacing:.32em; opacity:.75; margin-bottom:.35em; }
+  .stacked { flex-direction:column; gap:14px; text-align:center; }
+  svg { display:block; }
+</style>
+</head>
+<body>
+<header>
+  <p>Estúdio Benfica · Proposta de identidade · v1</p>
+  <h1>4 caminhos para o símbolo</h1>
+</header>
+
+<!-- SÍMBOLOS (reutilizáveis) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- 01 Visor: cantos do visor + play -->
+    <symbol id="s1" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70"/>
+      </g>
+      <path d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+    <!-- 02 Lente-play: anel da lente com play recortado -->
+    <symbol id="s2" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="8"/>
+      <circle cx="50" cy="50" r="28" fill="#2563ff"/>
+      <path d="M44 39 L63 50 L44 61 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="5" stroke-linejoin="round"/>
+      <circle cx="78" cy="22" r="6" fill="#c8ff1a"/>
+    </symbol>
+    <!-- 03 Monograma B: um B cujo vão inferior é um play -->
+    <symbol id="s3" viewBox="0 0 100 100">
+      <path d="M22 10h32a20 20 0 0 1 12 36a22 22 0 0 1-10 44H22Z" fill="currentColor"/>
+      <path d="M38 24h14a8 8 0 0 1 0 16H38Z" fill="var(--hole, #07080b)"/>
+      <path d="M38 52 L60 64 L38 76 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="4" stroke-linejoin="round"/>
+      <g fill="none" stroke="#2563ff" stroke-width="5" stroke-linecap="round"><path d="M4 22V4h18M96 78v18H78"/></g>
+    </symbol>
+    <!-- 04 Selo/adesivo -->
+    <symbol id="s4" viewBox="0 0 200 200">
+      <defs><path id="arc" d="M100 100 m-74 0 a74 74 0 1 1 148 0 a74 74 0 1 1 -148 0"/></defs>
+      <circle cx="100" cy="100" r="96" fill="#c8ff1a" stroke="#07080b" stroke-width="6"/>
+      <circle cx="100" cy="100" r="58" fill="#07080b"/>
+      <text font-family="Syne" font-weight="800" font-size="17" fill="#07080b"><textPath href="#arc" textLength="452" lengthAdjust="spacing">ESTÚDIO BENFICA • FOTO • VÍDEO •</textPath></text>
+      <g fill="none" stroke="#f5f7fa" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" transform="translate(66 66) scale(.68)">
+        <path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70"/>
+      </g>
+      <path d="M92 82 L118 100 L92 118 Z" fill="#2563ff" stroke="#2563ff" stroke-width="6" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="grid">
+  <!-- 01 -->
+  <article class="card">
+    <div class="stage">
+      <div class="lockup">
+        <svg width="96" height="96" style="color:#f5f7fa"><use href="#s1"/></svg>
+        <div class="wm" style="font-size:44px"><small>ESTÚDIO</small>BENFICA</div>
+      </div>
+    </div>
+    <div class="row">
+      <div style="background:#f5f7fa"><svg width="60" height="60" style="color:#07080b"><use href="#s1"/></svg></div>
+      <div style="background:#2563ff"><svg width="60" height="60" style="color:#f5f7fa"><use href="#s1"/></svg></div>
+      <div style="background:#11131a"><svg width="32" height="32" style="color:#f5f7fa"><use href="#s1"/></svg></div>
+    </div>
+    <div class="meta"><b>01 · VISOR</b><h2>O play dentro do visor</h2>
+      <p>Os quatro cantos do visor enquadram o play verde-limão. É o mais direto e limpo dos quatro: comunica "eu enquadro e dou vida às imagens" e funciona bem até bem pequeno, como ícone de perfil.</p></div>
+  </article>
+
+  <!-- 02 -->
+  <article class="card">
+    <div class="stage light">
+      <div class="lockup">
+        <svg width="96" height="96" style="color:#07080b"><use href="#s2"/></svg>
+        <div class="wm" style="font-size:44px"><small>ESTÚDIO</small>BENFICA</div>
+      </div>
+    </div>
+    <div class="row">
+      <div style="background:#07080b"><svg width="60" height="60" style="color:#f5f7fa"><use href="#s2"/></svg></div>
+      <div style="background:#c8ff1a"><svg width="60" height="60" style="color:#07080b"><use href="#s2"/></svg></div>
+      <div style="background:#11131a"><svg width="32" height="32" style="color:#f5f7fa"><use href="#s2"/></svg></div>
+    </div>
+    <div class="meta"><b>02 · LENTE</b><h2>A lente que vira play</h2>
+      <p>Um anel de lente com o play no centro e um ponto verde-limão, como a luz de gravação acesa. É mais acolhedor e arredondado, o que reforça o "confortável".</p></div>
+  </article>
+
+  <!-- 03 -->
+  <article class="card">
+    <div class="stage blue">
+      <div class="lockup stacked">
+        <svg width="100" height="100" style="color:#f5f7fa;--hole:#2563ff"><use href="#s3"/></svg>
+        <div class="wm" style="font-size:30px;letter-spacing:.06em">ESTÚDIO BENFICA</div>
+      </div>
+    </div>
+    <div class="row">
+      <div style="background:#07080b"><svg width="60" height="60" style="color:#f5f7fa;--hole:#07080b"><use href="#s3"/></svg></div>
+      <div style="background:#f5f7fa"><svg width="60" height="60" style="color:#07080b;--hole:#f5f7fa"><use href="#s3"/></svg></div>
+      <div style="background:#11131a"><svg width="32" height="32" style="color:#f5f7fa;--hole:#11131a"><use href="#s3"/></svg></div>
+    </div>
+    <div class="meta"><b>03 · MONOGRAMA</b><h2>O B que esconde um play</h2>
+      <p>A letra B de Benfica, com o espaço vazio de baixo virando um play e dois cantos de visor em azul. É o caminho mais "fora do padrão" e mais proprietário: ninguém mais tem.</p></div>
+  </article>
+
+  <!-- 04 -->
+  <article class="card">
+    <div class="stage">
+      <svg width="230" height="230" style="transform:rotate(-8deg)"><use href="#s4"/></svg>
+    </div>
+    <div class="row">
+      <div style="background:#2563ff"><svg width="80" height="80"><use href="#s4"/></svg></div>
+      <div style="background:#f5f7fa"><svg width="80" height="80"><use href="#s4"/></svg></div>
+      <div style="background:#11131a"><svg width="44" height="44"><use href="#s4"/></svg></div>
+    </div>
+    <div class="meta"><b>04 · SELO</b><h2>O adesivo, na linha da sua referência</h2>
+      <p>Um selo redondo em verde-limão, com o visor e o play no centro e o nome girando em volta. Tem o espírito de adesivo da referência que você mandou: ótimo para marca d'água, camiseta e capa de destaque. Funciona como versão complementar de qualquer um dos outros três.</p></div>
+  </article>
+</div>
+</body>
+</html>
