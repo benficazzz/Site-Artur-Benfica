@@ -229,48 +229,58 @@
             <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">Todos</button>
             <button class="filter" data-filter="casamento" role="tab" aria-selected="false">Casamentos</button>
             <button class="filter" data-filter="aniversario" role="tab" aria-selected="false">Aniversários</button>
-            <button class="filter" data-filter="futebol" role="tab" aria-selected="false">Futebol</button>
+            <button class="filter" data-filter="formatura" role="tab" aria-selected="false">Formaturas</button>
+            <button class="filter" data-filter="futebol" role="tab" aria-selected="false">Futebol & futsal</button>
             <button class="filter" data-filter="empresa" role="tab" aria-selected="false">Empresas</button>
           </div>
         </div>
 
-        <!-- TROCAR: cada .work recebe uma foto real. Exemplo:
-             <figure class="work" data-cat="casamento" data-title="Casamento Ana & João">
-               <img src="assets/img/casamento-01.jpg" alt="Casamento Ana e João" loading="lazy">
-               <figcaption>...</figcaption>
-             </figure> -->
+        <!-- Para adicionar fotos: copie um <figure class="work"> e troque data-cat, imagem e textos.
+             Categorias: casamento, aniversario, formatura, futebol, empresa. Filtros sem foto ficam ocultos. -->
         <div class="gallery">
-          <figure class="work work--tall" data-cat="casamento" data-title="Casamento" data-cursor="Ver">
-            <div class="placeholder ph-1"><span class="placeholder__label">Foto · Casamento</span></div>
-            <figcaption><span>Casamento</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--wide" data-cat="futebol" data-title="Cassino FC · Open Futsal" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-time.webp" alt="Elenco do Cassino FC posado em quadra antes do jogo" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Cassino FC · Open Futsal</strong></figcaption>
           </figure>
-          <figure class="work" data-cat="futebol" data-title="Futebol" data-cursor="Ver">
-            <div class="placeholder ph-2"><span class="placeholder__label">Foto · Futebol</span></div>
-            <figcaption><span>Futebol</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--tall" data-cat="futebol" data-title="Concentração" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-concentracao.webp" alt="Jogador do Cassino FC concentrado na roda do time" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Concentração</strong></figcaption>
           </figure>
-          <figure class="work" data-cat="aniversario" data-title="Aniversário" data-cursor="Ver">
-            <div class="placeholder ph-3"><span class="placeholder__label">Foto · Aniversário</span></div>
-            <figcaption><span>Aniversário</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Hora do parabéns" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-bolo-princesa.webp" alt="Menina com coroa de princesa soprando a vela de 5 anos" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Hora do parabéns</strong></figcaption>
           </figure>
-          <figure class="work work--wide" data-cat="empresa" data-title="Empresa" data-cursor="Ver">
-            <div class="placeholder ph-4"><span class="placeholder__label">Foto · Empresa</span></div>
-            <figcaption><span>Empresas</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-01.webp" alt="Formanda de beca segurando o canudo azul em direção à câmera" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
           </figure>
-          <figure class="work work--tall" data-cat="futebol" data-title="Futebol" data-cursor="Ver">
-            <div class="placeholder ph-5"><span class="placeholder__label">Foto · Futebol</span></div>
-            <figcaption><span>Futebol</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--tall" data-cat="aniversario" data-title="Detalhes da decoração" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-decoracao.webp" alt="Arranjo de lírios azuis e brancos na mesa da festa" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Detalhes da decoração</strong></figcaption>
           </figure>
-          <figure class="work" data-cat="casamento" data-title="Casamento" data-cursor="Ver">
-            <div class="placeholder ph-6"><span class="placeholder__label">Foto · Casamento</span></div>
-            <figcaption><span>Casamento</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work" data-cat="aniversario" data-title="15 anos" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-15-anos.webp" alt="Aniversariante de 15 anos abraçada à mãe ao lado do bolo azul" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>15 anos</strong></figcaption>
           </figure>
-          <figure class="work" data-cat="aniversario" data-title="Aniversário" data-cursor="Ver">
-            <div class="placeholder ph-7"><span class="placeholder__label">Foto · Aniversário</span></div>
-            <figcaption><span>Aniversário</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--tall" data-cat="futebol" data-title="Drible em quadra" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-cassino-drible.webp" alt="Jogador do Cassino FC conduzindo a bola em lance de futsal" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Drible em quadra</strong></figcaption>
           </figure>
-          <figure class="work" data-cat="empresa" data-title="Empresa" data-cursor="Ver">
-            <div class="placeholder ph-8"><span class="placeholder__label">Foto · Empresa</span></div>
-            <figcaption><span>Empresas</span><strong>Título do trabalho</strong></figcaption>
+          <figure class="work work--tall" data-cat="futebol" data-title="Lazio MTR · Comemoração" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-lazio-comemoracao.webp" alt="Jogador do Lazio MTR comemorando gol com gesto de silêncio" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Lazio MTR · Comemoração</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="formatura" data-title="Formandos 2026" data-cursor="Ver">
+            <img src="assets/img/portfolio/formatura-retrato-02.webp" alt="Formando de beca estendendo o canudo azul" loading="lazy" decoding="async">
+            <figcaption><span>Formatura</span><strong>Formandos 2026</strong></figcaption>
+          </figure>
+          <figure class="work work--wide" data-cat="aniversario" data-title="Festa na piscina" data-cursor="Ver">
+            <img src="assets/img/portfolio/aniversario-piscina.webp" alt="Convidados comemorando enquanto a água espirra na piscina" loading="lazy" decoding="async">
+            <figcaption><span>Aniversário</span><strong>Festa na piscina</strong></figcaption>
+          </figure>
+          <figure class="work work--tall" data-cat="futebol" data-title="Gol do Lazio MTR" data-cursor="Ver">
+            <img src="assets/img/portfolio/futsal-lazio-gol.webp" alt="Jogadores do Lazio MTR comemorando juntos apontando para a câmera" loading="lazy" decoding="async">
+            <figcaption><span>Futebol & futsal</span><strong>Gol do Lazio MTR</strong></figcaption>
           </figure>
         </div>
       </div>

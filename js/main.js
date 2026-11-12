@@ -232,6 +232,11 @@
 
   /* ---------- Filtro do portfólio ---------- */
   const works = $$(".work");
+  // Esconde filtros de categorias que ainda não têm fotos
+  $$(".filter").forEach((btn) => {
+    const f = btn.dataset.filter;
+    if (f !== "all" && !works.some((w) => w.dataset.cat === f)) btn.hidden = true;
+  });
   $$(".filter").forEach((btn) => {
     btn.addEventListener("click", () => {
       $$(".filter").forEach((b) => { b.classList.remove("is-active"); b.setAttribute("aria-selected", "false"); });
