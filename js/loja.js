@@ -300,7 +300,7 @@ async function telaPedido(pedido, token, tentativa = 0) {
     if (!r.ok) throw new Error(d.erro);
     if (d.status === "pago") {
       $("#ped-titulo").innerHTML = `Pagamento <em class="accent">aprovado!</em>`;
-      $("#ped-texto").textContent = "Obrigado! Baixe seus arquivos abaixo. Guarde este link: ele fica disponível por 30 dias.";
+      $("#ped-texto").innerHTML = `Obrigado! Baixe seus arquivos abaixo. Este link vale por 30 dias. Para acessar quando quiser, <a class="loja__link" href="conta.html">entre em Minha conta</a> com o mesmo e-mail da compra.`;
       $("#ped-downloads").innerHTML = d.itens.map((i) => `<div class="download">${i.previa ? `<img src="${esc(i.previa)}" alt="" loading="lazy">` : ""}<b>${esc(i.titulo || "")}</b>
         <a class="btn btn--lime btn--small" href="${API}/baixar?pedido=${encodeURIComponent(pedido)}&t=${encodeURIComponent(token)}&item=${encodeURIComponent(i.chave)}">Baixar ${i.tipo === "video" ? "vídeo" : "foto"}</a></div>`).join("");
     } else if (d.status === "recusado") {
