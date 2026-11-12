@@ -5,7 +5,7 @@
 window.SITE_CONFIG = {
   // WhatsApp com DDI + DDD + número, só dígitos. Ex.: "5531999999999"
   // Enquanto estiver vazio, os botões de WhatsApp mostram um aviso.
-  whatsapp: "",
+  whatsapp: "5531992264733",
 
   // Mensagem inicial do botão flutuante de WhatsApp
   whatsappMessage: "Olá, Artur! Vi seu site e gostaria de um orçamento.",
