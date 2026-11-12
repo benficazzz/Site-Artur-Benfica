@@ -12,7 +12,7 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Arquivos principais: `index.html`, `css/style.css`, `js/main.js`, `js/config.js` (contatos)
 - Loja: `loja.html`, `css/loja.css`, `js/loja.js`, `js/precos.js`, `js/loja-demo.js`, `data/catalogo.json` (ainda não existe; é gerado)
 - Servidor de pagamento: `worker/loja-worker.js` (Cloudflare Worker, gerado por `ferramentas/montar_worker.py` a partir de `worker/src.js` + `js/precos.js`). Guia em `PAGAMENTO.md`. A pasta `functions/` (Cloud Functions) ficou como alternativa caso o Blaze seja ativado
-- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `PAGAMENTO.md`, `assets/logo/LEIA-ME.md`
+- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `PAGAMENTO.md`, `HISTORICO.md`, `PROXIMOS-PASSOS.md`, `assets/logo/LEIA-ME.md`
 
 ## Identidade
 - Marca: **Estúdio Benfica**. Logo aprovado: conceito **01 · Visor** (cantos do visor de câmera + play verde-limão)
