@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Catálogo: leitura pública só de eventos marcados como públicos
+    match /eventos/{evento} {
+      allow read: if resource.data.publico == true;
+      allow write: if false;
+      match /itens/{item} {
+        allow read: if get(/databases/$(database)/documents/eventos/$(evento)).data.publico == true;
+        allow write: if false;
+      }
+    }
+    match /config/precos {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Pedidos: só o servidor (Cloud Functions) lê e escreve
+    match /pedidos/{pedido} {
+      allow read, write: if false;
+    }
+  }
+}

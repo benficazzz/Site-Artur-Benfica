@@ -1,0 +1,14 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Prévias com marca d'água: públicas
+    match /previas/{caminho=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Originais: ninguém acessa diretamente; a entrega é feita pela função "baixar"
+    match /originais/{caminho=**} {
+      allow read, write: if false;
+    }
+  }
+}

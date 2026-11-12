@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loja · Estúdio Benfica</title>
+  <meta name="description" content="Encontre e compre suas fotos e vídeos de jogos e eventos do Estúdio Benfica. Pague com Pix, crédito ou débito." />
+  <meta name="theme-color" content="#07080b" />
+  <meta property="og:title" content="Loja · Estúdio Benfica" />
+  <meta property="og:image" content="https://benficazzz.github.io/Site-Artur-Benfica/assets/logo/png/capa-1920x1080.png" />
+  <link rel="icon" href="assets/logo/svg/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/logo/png/favicon-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/loja.css" />
+</head>
+<body class="loja is-ready">
+  <header class="header is-scrolled">
+    <a href="index.html" class="logo" aria-label="Estúdio Benfica, página inicial">
+      <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path class="play" d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg>
+      <span class="logo__text"><small>ESTÚDIO</small>BENFICA</span>
+    </a>
+    <nav class="nav" aria-label="Principal">
+      <a href="index.html#portfolio">Portfólio</a>
+      <a href="loja.html" class="is-active">Loja</a>
+      <a href="index.html#contato" class="btn btn--small btn--lime">Contato</a>
+    </nav>
+    <a href="index.html" class="loja__voltar" aria-label="Voltar ao site">← Site</a>
+  </header>
+
+  <main class="loja__main">
+    <div class="loja__aviso" id="aviso-demo" hidden>
+      <b>Modo demonstração.</b> O pagamento ainda não está ativado: você pode navegar, montar o carrinho e ver os preços.
+    </div>
+
+    <!-- Lista de eventos -->
+    <section class="container loja__secao" id="tela-eventos">
+      <p class="eyebrow hud"><span class="dot"></span> Loja</p>
+      <h1 class="section__title">Encontre suas <em class="accent">fotos</em> e vídeos.</h1>
+      <p class="loja__sub">Escolha o evento, selecione as imagens e pague com Pix, crédito ou débito. As fotos chegam sem marca d'água, em alta resolução.</p>
+      <div class="loja__busca">
+        <input type="search" id="busca-evento" placeholder="Buscar evento ou time…" aria-label="Buscar evento ou time" />
+      </div>
+      <div class="eventos" id="lista-eventos"></div>
+      <p class="loja__vazio" id="eventos-vazio" hidden>Nenhum evento encontrado.</p>
+    </section>
+
+    <!-- Um evento -->
+    <section class="container loja__secao" id="tela-evento" hidden>
+      <button class="loja__link" id="voltar-eventos">← Todos os eventos</button>
+      <div class="evento__topo">
+        <div>
+          <p class="eyebrow hud" id="ev-meta"></p>
+          <h1 class="section__title" id="ev-nome"></h1>
+        </div>
+        <div class="evento__filtros">
+          <select id="f-time" aria-label="Filtrar por time"><option value="">Todos os times</option></select>
+          <select id="f-atleta" aria-label="Filtrar por atleta"><option value="">Todos os atletas</option></select>
+          <div class="seg" id="f-tipo" role="tablist" aria-label="Tipo">
+            <button data-tipo="" class="is-active">Tudo</button><button data-tipo="foto">Fotos</button><button data-tipo="video">Vídeos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pacotes" id="pacotes"></div>
+
+      <div class="evento__acoes">
+        <span id="ev-contagem"></span>
+        <button class="loja__link" id="sel-todos">Selecionar todos visíveis</button>
+      </div>
+      <div class="itens" id="lista-itens"></div>
+    </section>
+
+    <!-- Retorno do pagamento / downloads -->
+    <section class="container loja__secao" id="tela-pedido" hidden>
+      <p class="eyebrow hud"><span class="dot"></span> Seu pedido</p>
+      <h1 class="section__title" id="ped-titulo">Verificando pagamento…</h1>
+      <p class="loja__sub" id="ped-texto"></p>
+      <div class="downloads" id="ped-downloads"></div>
+      <a href="loja.html" class="btn btn--ghost">Voltar à loja</a>
+    </section>
+  </main>
+
+  <!-- Barra do carrinho -->
+  <div class="carrinho-barra" id="barra" hidden>
+    <div><b id="barra-qtd"></b><span id="barra-eco"></span></div>
+    <button class="btn btn--lime" id="abrir-carrinho">Ver carrinho · <span id="barra-total"></span></button>
+  </div>
+
+  <!-- Carrinho -->
+  <aside class="carrinho" id="carrinho" aria-hidden="true" aria-label="Carrinho">
+    <div class="carrinho__painel">
+      <header><h2>Seu carrinho</h2><button class="carrinho__fechar" id="fechar-carrinho" aria-label="Fechar">×</button></header>
+      <div class="carrinho__lista" id="car-lista"></div>
+      <div class="carrinho__dica" id="car-dica" hidden></div>
+      <dl class="carrinho__resumo" id="car-resumo"></dl>
+      <form class="carrinho__form" id="car-form" novalidate>
+        <div class="field"><input id="c-nome" name="nome" placeholder=" " required autocomplete="name" /><label for="c-nome">Seu nome</label></div>
+        <div class="field"><input id="c-email" name="email" type="email" placeholder=" " required autocomplete="email" /><label for="c-email">E-mail (para receber as fotos)</label></div>
+        <button type="submit" class="btn btn--lime btn--block" id="car-pagar">Pagar com Pix ou cartão</button>
+        <p class="carrinho__seguro">Pagamento processado pelo Mercado Pago. Pix, crédito e débito.</p>
+        <p class="form__note" id="car-msg" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Visualizar item -->
+  <div class="lightbox" id="lb" aria-hidden="true" role="dialog" aria-label="Visualizar">
+    <button class="lightbox__close" id="lb-fechar" aria-label="Fechar">×</button>
+    <div class="lightbox__stage" id="lb-stage"></div>
+    <p class="lightbox__caption" id="lb-cap"></p>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/precos.js"></script>
+  <script src="js/loja-demo.js"></script>
+  <script type="module" src="js/loja.js"></script>
+</body>
+</html>
