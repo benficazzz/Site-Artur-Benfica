@@ -270,6 +270,7 @@ async function pagar(e) {
     msg.textContent = "Pedido aberto no WhatsApp. É só enviar a mensagem!";
     return;
   }
+  if (demo) { msg.textContent = "Estes são eventos de demonstração. Os eventos reais entram em breve."; return; }
   const btn = $("#car-pagar"); btn.disabled = true; msg.textContent = "Gerando pagamento seguro…";
   try {
     const res = await fetch(`${API}/criarPagamento`, {

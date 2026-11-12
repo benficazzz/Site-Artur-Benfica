@@ -14,10 +14,10 @@ window.FIREBASE_CONFIG = {
 };
 
 // Endereço do servidor de pagamento (Cloudflare Worker). Preencha depois de publicar o Worker.
-window.LOJA_API = "";
+window.LOJA_API = "https://loja-estudio-benfica.arturbenfica5.workers.dev";
 
 // Conta de serviço usada pelo servidor para ler o banco e entregar os originais do Drive
 window.LOJA_SERVIDOR_EMAIL = "loja-servidor@estudio-benfica.iam.gserviceaccount.com";
 
 // Troque para true quando o pagamento estiver pronto
-window.LOJA_ATIVA = false; // true + LOJA_API preenchido = pagamento online ligado
+window.LOJA_ATIVA = true; // true + LOJA_API preenchido = pagamento online ligado
