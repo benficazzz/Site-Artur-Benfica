@@ -13,6 +13,7 @@ const REAL = !!(CFG.apiKey && CFG.appId && window.LOJA_ATIVA);
 
 let eventos = [];          // [{id, nome, data, local, capa, precos?, itens:[...]}]
 let precosGlobais = {};
+let demo = false;
 let atual = null;          // evento aberto
 const filtro = { time: "", atleta: "", tipo: "" };
 
@@ -24,23 +25,22 @@ const salvar = () => { try { localStorage.setItem(KEY, JSON.stringify(carrinho))
 
 /* ---------- Dados ---------- */
 async function carregar() {
+  // 1) catálogo gerado a partir do Drive (ferramentas/sincronizar_loja.py)
+  try {
+    const r = await fetch("data/catalogo.json", { cache: "no-cache" });
+    if (r.ok) {
+      const c = await r.json();
+      eventos = c.eventos || [];
+      precosGlobais = c.precos || {};
+    }
+  } catch {}
+  // 2) sem catálogo: mostra a demonstração
+  if (!eventos.length) { eventos = window.LOJA_DEMO; demo = true; }
   if (!REAL) {
     $("#aviso-demo").hidden = false;
-    eventos = window.LOJA_DEMO;
-    return;
+    $("#car-pagar").textContent = "Enviar pedido pelo WhatsApp";
+    $(".carrinho__seguro").textContent = "Você recebe a chave Pix pelo WhatsApp. Pagamento online com cartão em breve.";
   }
-  const v = "10.12.2";
-  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${v}/firebase-app.js`);
-  const fs = await import(`https://www.gstatic.com/firebasejs/${v}/firebase-firestore.js`);
-  const db = fs.getFirestore(initializeApp(CFG));
-  const cfg = await fs.getDoc(fs.doc(db, "config", "precos"));
-  precosGlobais = cfg.exists() ? cfg.data() : {};
-  const snap = await fs.getDocs(fs.query(fs.collection(db, "eventos"), fs.where("publico", "==", true)));
-  eventos = await Promise.all(snap.docs.map(async (d) => {
-    const its = await fs.getDocs(fs.query(fs.collection(db, "eventos", d.id, "itens"), fs.orderBy("ordem")));
-    return { id: d.id, ...d.data(), itens: its.docs.map((x) => ({ id: x.id, ...x.data() })) };
-  }));
-  eventos.sort((a, b) => (b.data || "").localeCompare(a.data || ""));
 }
 
 const precosDe = (ev) => P.mesclar(P.mesclar(P.PADRAO, precosGlobais), (ev && ev.precos) || {});
@@ -51,7 +51,7 @@ const esc = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 function telaEventos() {
   mostrar("tela-eventos");
   const q = $("#busca-evento").value.trim().toLowerCase();
-  const lista = eventos.filter((e) => !q || [e.nome, e.local, ...(e.times || [])].join(" ").toLowerCase().includes(q));
+  const lista = eventos.filter((e) => !e.privado).filter((e) => !q || [e.nome, e.local, ...(e.times || [])].join(" ").toLowerCase().includes(q));
   $("#lista-eventos").innerHTML = lista.map((e) => `
     <a class="evento-card" href="#evento/${esc(e.id)}">
       <img src="${esc(e.capa)}" alt="" loading="lazy" decoding="async">
@@ -216,7 +216,22 @@ async function pagar(e) {
   e.preventDefault();
   const msg = $("#car-msg"), nome = $("#c-nome").value.trim(), email = $("#c-email").value.trim();
   if (!nome || !/^\S+@\S+\.\S+$/.test(email)) { msg.textContent = "Preencha seu nome e um e-mail válido."; return; }
-  if (!REAL) { msg.textContent = "Modo demonstração: o pagamento será ativado quando a loja for publicada."; return; }
+  if (!REAL) {
+    // Pré-lançamento: o pedido vai pelo WhatsApp e o Pix é combinado direto
+    if (demo) { msg.textContent = "Estes são eventos de demonstração. Os eventos reais entram em breve."; return; }
+    const r = resumo(), cob = idsCobertos();
+    const nomeEv = (id) => eventos.find((x) => x.id === id)?.nome || id;
+    const linhas = [
+      ...carrinho.pacotes.map((p) => `• ${p.rotulo} (${nomeEv(p.evento)})`),
+      ...carrinho.itens.filter((i) => !cob.has(i.id)).map((i) => `• ${i.tipo === "video" ? "Vídeo" : "Foto"} ${i.titulo} (${nomeEv(i.evento)})`),
+    ];
+    const texto = `Olá, Artur! Quero comprar pela loja do site:\n\n${linhas.join("\n")}\n\nTotal: ${brl(r.total)}\nNome: ${nome}\nE-mail: ${email}`;
+    const wa = (window.SITE_CONFIG || {}).whatsapp;
+    if (!wa) { msg.textContent = "WhatsApp não configurado."; return; }
+    window.open(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`, "_blank", "noopener");
+    msg.textContent = "Pedido aberto no WhatsApp. É só enviar a mensagem!";
+    return;
+  }
   const btn = $("#car-pagar"); btn.disabled = true; msg.textContent = "Gerando pagamento seguro…";
   try {
     const res = await fetch(`${API}/criarPagamento`, {

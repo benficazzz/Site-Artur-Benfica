@@ -86,3 +86,24 @@ Depois troque para o token de produção (repita o `secrets:set` e o `deploy --o
 ## Próxima fase
 Sincronização com o Google Drive: uma pasta por evento → prévias com marca d'água e originais
 enviados automaticamente para a loja.
+
+---
+
+## Catálogo a partir do Google Drive (em uso)
+
+Pasta no Drive: **Loja Estúdio Benfica** (veja o arquivo `COMO USAR` dentro dela).
+
+```
+Loja Estúdio Benfica/
+  AAAA-MM-DD · Nome do evento/
+    Nome do time/
+      [Nome ou camisa do atleta/]
+        fotos e vídeos
+```
+
+Para publicar: peça "sincroniza a loja". O processo baixa os arquivos novos, roda
+`ferramentas/sincronizar_loja.py` (prévias com marca d'água em `assets/loja/` e
+`data/catalogo.json`) e publica no site. Os originais continuam só no Drive.
+
+Enquanto o pagamento online não está ativo, o carrinho envia o pedido pelo **WhatsApp**
+(com a lista de arquivos e o total) e o Pix é combinado direto.
