@@ -9,7 +9,7 @@ const P = window.Precos;
 const brl = P.brl;
 const CFG = window.FIREBASE_CONFIG || {};
 const API = window.LOJA_API;
-const REAL = !!(CFG.apiKey && CFG.appId);
+const REAL = !!(CFG.apiKey && CFG.appId && window.LOJA_ATIVA);
 
 let eventos = [];          // [{id, nome, data, local, capa, precos?, itens:[...]}]
 let precosGlobais = {};
