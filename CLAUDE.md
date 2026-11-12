@@ -37,7 +37,7 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
   - Pacotes de fotos: 5 por R$ 40, 10 por R$ 70, 20 por R$ 120. Pacotes de vídeos: 5 por R$ 40, 10 por R$ 70
   - Pacotes fechados por **atleta** e por **time** (fotos, vídeos ou misto). Valores de exemplo, ajustáveis por evento
   - Um pacote fechado só aparece quando sai mais barato que comprar avulso
-- **Hoje funciona assim (pré-lançamento):** o carrinho envia o pedido pelo **WhatsApp** com a lista de itens e o total, e o Pix é combinado direto. `window.LOJA_ATIVA = false` em `js/firebase-config.js`
+- Pagamento online ligado (`LOJA_ATIVA = true`). Com o pagamento desligado, o carrinho manda o pedido pelo WhatsApp
 - **Catálogo:** vem do Drive. Pasta **"Loja Estúdio Benfica"** (id `1LW7vYxUgyn5K2hJxuQFFs3aUmhjvF1Ho`), estrutura `AAAA-MM-DD · Evento / Time / [Atleta] / arquivos`
   - "sincroniza a loja": baixar do Drive para `<pasta>/<evento>/<time>/[atleta]/<driveId>__<nome>`, rodar `python3 ferramentas/sincronizar_loja.py --origem <pasta> --site .` (precisa de `pillow-heif` e `ffmpeg`), revisar e publicar
   - Os originais ficam só no Drive
@@ -45,8 +45,8 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
   - Firestore criado em southamerica-east1 (São Paulo), modo produção
   - App Web registrado. A configuração pública já está em `js/firebase-config.js`
   - **Plano Spark:** o upgrade para o Blaze falhou (problema com o cartão). Sem o Blaze não há Cloud Functions nem Storage
-- **Mercado Pago:** conta CNPJ. A aplicação Checkout Pro ainda não foi criada. O token NUNCA passa pelo chat: vai como segredo (`firebase functions:secrets:set MP_ACCESS_TOKEN`) ou como variável secreta equivalente
-- **Pagamento (ligado, token de TESTE do Mercado Pago; Worker https://loja-estudio-benfica.arturbenfica5.workers.dev):** Cloudflare Worker (grátis) + Firestore no Spark + originais entregues do Drive pela conta de serviço `loja-servidor@estudio-benfica.iam.gserviceaccount.com` (papel Cloud Datastore User; o painel compartilha a pasta de originais com ela). Segredos no Worker: `GOOGLE_SERVICE_ACCOUNT`, `MP_ACCESS_TOKEN`; texto `SITE_URL`. Para ligar: `LOJA_API` = URL do Worker e `LOJA_ATIVA = true` em `js/firebase-config.js`. Worker testado com serviços simulados (17 verificações)
+- **Mercado Pago:** conta CNPJ, aplicação "Loja Estudio Benfica" (Checkout Pro, API de Preferências), credenciais de produção. O token NUNCA passa pelo chat: vai como segredo (`firebase functions:secrets:set MP_ACCESS_TOKEN`) ou como variável secreta equivalente
+- **Pagamento (em produção na conta CNPJ, Pix funcionando; Worker https://loja-estudio-benfica.arturbenfica5.workers.dev):** Cloudflare Worker (grátis) + Firestore no Spark + originais entregues do Drive pela conta de serviço `loja-servidor@estudio-benfica.iam.gserviceaccount.com` (papel Cloud Datastore User; o painel compartilha a pasta de originais com ela). Segredos no Worker: `GOOGLE_SERVICE_ACCOUNT`, `MP_ACCESS_TOKEN`; texto `SITE_URL`. Para ligar: `LOJA_API` = URL do Worker e `LOJA_ATIVA = true` em `js/firebase-config.js`. Worker testado com serviços simulados (17 verificações)
 - Ambiente: este container bloqueia api.mercadopago.com. As APIs do Google estão acessíveis
 
 ## Painel de admin (feito, falta ativar no console)
@@ -71,9 +71,14 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - E-mails dos pedidos são gravados em minúsculas. Pedidos do WhatsApp (sem `linhas`) também funcionam
 - Testes: 31 regras no emulador, 27 verificações no Worker, página no computador e iPhone
 
+## Outros
+- Aviso de venda no Telegram (opcional): segredos `TELEGRAM_TOKEN` e texto `TELEGRAM_CHAT_ID` no Worker; teste em `/testeAviso?chat=<id>`
+- Páginas legais: `termos.html` e `privacidade.html` (modelo; CNPJ e cidade a preencher; revisar com contador)
+- Cache: `python3 ferramentas/versao.py` carimba `?v=` nos CSS/JS antes de cada publicação
+
 ## Fluxo de trabalho
 - Testar com Playwright (Chromium já instalado), no computador e no iPhone 13, sem rolagem horizontal
 - Publicar a prévia no Artifact
 - Commitar com mensagem em português e enviar para a branch de trabalho
 - Para levar ao site: abrir PR para o `main`. O merge é sempre feito pelo Artur
-- Pendente: PR com a correção da imagem de compartilhamento (og:image absoluta) e com a loja, a decidir quando lançar
+- Pendências futuras: e-mail automático com os links (precisa de domínio), domínio próprio, Google Search Console/Meu Negócio, busca por camisa, foto do Sobre, showreel, textos

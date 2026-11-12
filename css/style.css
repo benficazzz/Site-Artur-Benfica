@@ -212,7 +212,7 @@ p { color: #c9cfdb; }
 .hero__content { position: relative; z-index: 2; }
 .hero__title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(2.3rem, 6.2vw, 6.2rem); line-height: 1; letter-spacing: -.04em;
+  font-size: clamp(2.3rem, 5.4vw, 5.2rem); line-height: 1; letter-spacing: -.04em;
   margin: 0 0 32px;
 }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: .08em; }
@@ -556,3 +556,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--lime) var(--black); }
 
 /* links da loja escondidos até o lançamento (js/config.js → mostrarLoja) */
 [data-loja][hidden] { display: none !important; }
+
+.footer__legal a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.footer__legal a:hover { color: var(--white); }

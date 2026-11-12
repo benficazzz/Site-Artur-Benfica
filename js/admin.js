@@ -2,8 +2,8 @@
    Painel do Estúdio Benfica
    ?teste=1  → modo de teste (dados só no navegador)
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste, novoId, slug } from "./banco.js";
-import { prepararFonte, previaFoto, previaVideo } from "./marca.js";
+import { criarBancoFirebase, criarBancoTeste, novoId, slug } from "./banco.js?v=202611121919";
+import { prepararFonte, previaFoto, previaVideo } from "./marca.js?v=202611121919";
 
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));

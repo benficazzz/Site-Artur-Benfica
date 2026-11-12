@@ -29,3 +29,6 @@
 .conta__vazio { padding: 40px 20px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius); display: grid; gap: 12px; justify-items: center; }
 .conta__vazio h2 { margin: 0; font-family: var(--font-display); }
 @media (max-width: 860px) { .conta .nav { display: none; } }
+
+.conta__legal { text-align: center; margin-top: 40px; font-size: .82rem; color: var(--muted); }
+.conta__legal a { color: var(--muted); text-decoration: underline; }
