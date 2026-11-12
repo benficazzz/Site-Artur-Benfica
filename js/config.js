@@ -10,6 +10,9 @@ window.SITE_CONFIG = {
   // Mensagem inicial do botão flutuante de WhatsApp
   whatsappMessage: "Olá, Artur! Vi seu site e gostaria de um orçamento.",
 
+  // Mostrar o link da Loja no site? (false = loja escondida, só abre pelo endereço direto)
+  mostrarLoja: false,
+
   // Palavras que giram no texto de abertura
   rotatorWords: ["fotografia", "vídeo", "edição", "marketing digital", "tráfego pago"]
 };

@@ -60,7 +60,8 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Pedido pelo WhatsApp é registrado no Firestore com código (8 primeiros caracteres do id)
 - Modo de treino: `admin.html?teste=1` e `loja.html?teste=1` (localStorage)
 - `firestore.rules` testado no emulador (24 casos) e o fluxo ponta a ponta também (painel → loja → pedido → entrega)
-- **Falta o Artur:** ativar login Google, autorizar o domínio benficazzz.github.io, publicar as regras e ativar a Drive API (ver `ADMIN.md`)
+- Console já configurado pelo Artur: login Google ativo, domínio benficazzz.github.io autorizado, regras publicadas, Drive API ativa
+- Loja escondida do público até o lançamento: `mostrarLoja: false` em `js/config.js` (links com `data-loja`) e `noindex` em `loja.html`
 - Hook só para testes: `window.FIREBASE_EMULADOR` (nunca definido no site)
 
 ## Fluxo de trabalho

@@ -22,6 +22,9 @@
   window.addEventListener("load", () => setTimeout(finishLoading, reduceMotion ? 0 : 1100));
   setTimeout(finishLoading, 4000); // segurança caso algum recurso demore
 
+  /* ---------- Link da loja (liberado em js/config.js) ---------- */
+  if (cfg.mostrarLoja) document.querySelectorAll("[data-loja]").forEach((el) => (el.hidden = false));
+
   /* ---------- Ano no rodapé ---------- */
   const y = $("#year"); if (y) y.textContent = new Date().getFullYear();
 
