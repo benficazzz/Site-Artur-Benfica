@@ -1,0 +1,62 @@
+rules_version = '2';
+// Regras do Firestore · Estúdio Benfica
+// Cole este conteúdo em: Console do Firebase > Firestore > Regras > Publicar
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Só a conta do Artur (login Google, e-mail verificado) administra a loja
+    function admin() {
+      return request.auth != null
+        && request.auth.token.email == 'arturbenfica5@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+    function eventoVisivel(id) {
+      return get(/databases/$(database)/documents/eventos/$(id)).data.publico == true;
+    }
+
+    // Eventos: a lista pública mostra só os publicados e não privados.
+    // Galerias privadas abrem só por link (é preciso saber o identificador).
+    match /eventos/{evento} {
+      allow get: if resource.data.publico == true || admin();
+      allow list: if admin() || (resource.data.publico == true && resource.data.privado == false);
+      allow write: if admin();
+
+      match /itens/{item} {
+        allow read: if admin() || eventoVisivel(evento);
+        allow write: if admin();
+      }
+    }
+
+    // Prévias grandes (com marca d'água)
+    match /previas/{item} {
+      allow read: if admin() || eventoVisivel(resource.data.evento);
+      allow write: if admin();
+    }
+
+    // Referência dos originais no Google Drive: só o admin
+    match /originais/{item} {
+      allow read, write: if admin();
+    }
+
+    // Preços: leitura pública, edição só do admin
+    match /config/{doc} {
+      allow read: if true;
+      allow write: if admin();
+    }
+
+    // Pedidos: o visitante só pode CRIAR um pedido novo (sem ler os dos outros)
+    match /pedidos/{pedido} {
+      allow read, update, delete: if admin();
+      allow create: if admin() || (
+        request.resource.data.keys().hasOnly(['nome', 'email', 'total', 'origem', 'itens', 'pacotes', 'status', 'criadoEm'])
+        && request.resource.data.status == 'novo'
+        && request.resource.data.criadoEm == request.time
+        && request.resource.data.nome is string && request.resource.data.nome.size() > 0 && request.resource.data.nome.size() <= 120
+        && request.resource.data.email is string && request.resource.data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && request.resource.data.total is number && request.resource.data.total >= 0 && request.resource.data.total < 100000
+        && request.resource.data.itens is list && request.resource.data.itens.size() <= 300
+        && request.resource.data.pacotes is list && request.resource.data.pacotes.size() <= 20
+      );
+    }
+  }
+}

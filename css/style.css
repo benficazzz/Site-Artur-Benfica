@@ -553,3 +553,6 @@ html { scrollbar-width: thin; scrollbar-color: var(--lime) var(--black); }
   .rail__list a::after { width: 5px; height: 5px; margin-top: -2.5px; right: 3px; }
   .rail { opacity: .8; }
 }
+
+/* links da loja escondidos até o lançamento (js/config.js → mostrarLoja) */
+[data-loja][hidden] { display: none !important; }
