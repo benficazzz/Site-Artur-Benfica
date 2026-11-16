@@ -5,8 +5,8 @@ Responder sempre em **português do Brasil**, com tom profissional e prático. P
 publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, números, depoimentos).
 
 ## Onde está cada coisa
-- **Site no ar:** https://benficazzz.github.io/ depois que o repositório for renomeado para `benficazzz.github.io` (antes: /Site-Artur-Benfica/). A pasta `Site-Artur-Benfica/` só redireciona os endereços antigos
-- **Repositório:** `benficazzz/Site-Artur-Benfica`. O trabalho é feito numa branch e entra no `main` por pull request, que o Artur aprova
+- **Site no ar:** https://benficazzz.github.io/ (repositório renomeado para `benficazzz/benficazzz.github.io`, Pages na branch `main`, raiz). A pasta `Site-Artur-Benfica/` redireciona os endereços antigos
+- **Repositório:** `benficazzz/benficazzz.github.io` (antes Site-Artur-Benfica). O trabalho é feito numa branch e entra no `main` por pull request, que o Artur aprova
 - **Prévia privada (Artifact):** https://claude.ai/artifact/KFZPsodipSeN2oppxZSA5A
 - Stack: HTML + CSS + JS puro, sem etapa de build
 - Arquivos principais: `index.html`, `css/style.css`, `js/main.js`, `js/config.js` (contatos)
