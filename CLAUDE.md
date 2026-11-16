@@ -17,7 +17,7 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 ## Identidade
 - Marca: **Estúdio Benfica**. Logo aprovado: conceito **01 · Visor** (cantos do visor de câmera + play verde-limão)
 - Cores: preto `#07080b`, azul `#2563ff`, branco `#f5f7fa`, verde-limão `#c8ff1a`
-- Fontes: Syne (títulos), Inter (texto), Geist Mono (rótulos)
+- Fontes do site (desde 16/11): Sora (títulos), Archivo (texto), IBM Plex Mono (rótulos), as mesmas da GMX. Syne ficou só no logotipo "BENFICA" e na marca d’água
 - Arquivos do logo: `assets/logo/svg`, `assets/logo/png`, `assets/logo/instagram` (perfil e marcas d'água para Stories)
 - Marca d'água das fotos: "ESTÚDIO BENFICA" + símbolo, em grade diagonal a 30°, opacidade de 16%
 - Estilo do site inspirado em getartcraft.com: trilho lateral de rolagem numerado, entradas com desfoque, rótulos HUD em fonte mono

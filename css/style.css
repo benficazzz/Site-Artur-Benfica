@@ -14,9 +14,10 @@
   --lime: #c8ff1a;
   --lime-2: #a6db00;
 
-  --font-display: "Syne", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-logo: "Syne", "Sora", system-ui, sans-serif;
+  --font-body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius: 22px;
   --radius-sm: 14px;
@@ -76,7 +77,7 @@ body::after {
 .section__title {
   font-family: var(--font-display);
   font-size: clamp(2.3rem, 6vw, 4.9rem);
-  line-height: 1.04; letter-spacing: -0.03em; margin: 0; font-weight: 700;
+  line-height: 1.06; letter-spacing: -0.025em; margin: 0; font-weight: 700;
 }
 .accent { font-style: normal; color: var(--lime); }
 .accent--blue { color: var(--blue); filter: brightness(1.35); }
@@ -167,7 +168,7 @@ p { color: #c3cce0; }
 .logo__mark { width: 40px; height: 40px; color: var(--white); flex: none; overflow: visible; }
 .logo__mark .play { transform-origin: 55% 50%; transition: transform .5s var(--ease); }
 .logo:hover .logo__mark .play { transform: scale(1.18) translateX(3px); }
-.logo__text { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: .95; letter-spacing: -.01em; }
+.logo__text { font-family: var(--font-logo); font-weight: 800; font-size: 1.15rem; line-height: .95; letter-spacing: -.01em; }
 .logo__text small { display: block; font-family: var(--font-mono); font-weight: 500; font-size: .5em; letter-spacing: .32em; opacity: .8; margin-bottom: 3px; }
 .nav { display: flex; align-items: center; gap: clamp(18px, 2.4vw, 34px); font-size: .93rem; }
 .nav a:not(.btn) { position: relative; color: #d4d9e3; transition: color .3s; }
@@ -213,7 +214,7 @@ p { color: #c3cce0; }
 .hero__content { position: relative; z-index: 2; }
 .hero__title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(2.5rem, 6vw, 5.8rem); line-height: .98; letter-spacing: -.045em;
+  font-size: clamp(2.6rem, 7vw, 6.9rem); line-height: 1.02; letter-spacing: -.035em;
   margin: 0 0 32px;
 }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: .08em; }
