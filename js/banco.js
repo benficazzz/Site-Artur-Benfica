@@ -148,6 +148,7 @@ export async function criarBancoFirebase(config) {
       ]);
     },
     listarItens: (ev) => lista(fs.query(col("eventos", ev, "itens"), fs.orderBy("ordem"))),
+    listarItensPagina: (ev, n, depois) => lista(fs.query(col("eventos", ev, "itens"), fs.orderBy("ordem"), ...(depois != null ? [fs.startAfter(depois)] : []), fs.limit(n))),
     async criarItem(ev, item, previa, original) {
       const id = item.id || novoId();
       await emLotes([
@@ -221,6 +222,7 @@ export function criarBancoTeste() {
     async salvarEvento(ev) { d.eventos[ev.id] = { ...d.eventos[ev.id], ...ev }; gravar(); },
     async apagarEvento(id) { Object.values(d.itens).filter((i) => i.evento === id).forEach((i) => { delete d.itens[i.id]; delete d.previas[i.id]; delete d.originais[i.id]; }); delete d.eventos[id]; gravar(); },
     listarItens: async (ev) => espera(Object.values(d.itens).filter((i) => i.evento === ev).sort((a, b) => a.ordem - b.ordem)),
+    listarItensPagina: async (ev, n, depois) => espera(Object.values(d.itens).filter((i) => i.evento === ev && (depois == null || i.ordem > depois)).sort((a, b) => a.ordem - b.ordem).slice(0, n)),
     async criarItem(ev, item, previa, original) { const id = item.id || novoId(); d.itens[id] = { ...item, id, evento: ev }; if (previa) d.previas[id] = previa; d.originais[id] = { evento: ev, ...original }; gravar(); return id; },
     async atualizarItens(ev, ids, patch) { ids.forEach((id) => Object.assign(d.itens[id], patch)); gravar(); },
     async apagarItens(ev, ids) { ids.forEach((id) => { delete d.itens[id]; delete d.previas[id]; delete d.originais[id]; }); gravar(); },

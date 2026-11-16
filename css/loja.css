@@ -115,3 +115,18 @@
 .carrinho-barra[hidden], .loja__aviso[hidden], .pacote[hidden], select[hidden] { display: none !important; }
 
 .loja__conta { margin: -18px 0 26px; font-size: .9rem; color: var(--muted); }
+
+/* Seleção mais clara: "+" antes de escolher, "✓" depois */
+.item__check { color: var(--white); font-size: 1.1rem; line-height: 1; }
+.item__check b { display: none; }
+.item.is-sel .item__check i, .item.is-coberto .item__check i { display: none; }
+.item.is-sel .item__check b, .item.is-coberto .item__check b { display: inline; }
+.item__check i { font-style: normal; font-weight: 600; }
+.item__ver, .item__check { width: 36px; height: 36px; }
+.item.is-sel { box-shadow: 0 0 0 2px var(--lime), 0 10px 30px -10px rgba(200,255,26,.5); }
+.dica-sel { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; padding: 12px 14px; border-radius: var(--radius-sm); background: rgba(200,255,26,.08); border: 1px solid rgba(200,255,26,.3); }
+.dica-sel[hidden] { display: none; }
+.dica-sel p { margin: 0; flex: 1; font-size: .92rem; line-height: 1.4; }
+.dica-sel__icone { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--lime); color: var(--lime); font-weight: 700; }
+.dica-sel__ver { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: .75rem; }
+.dica-sel button { flex: none; padding: 8px 14px; border-radius: 999px; background: var(--lime); color: var(--black); font-weight: 600; font-size: .85rem; }
