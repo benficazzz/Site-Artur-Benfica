@@ -3,7 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611121919";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161344";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;
@@ -330,7 +330,9 @@ function rota() {
 async function ampliar(id) {
   const it = atual.itens.find((x) => x.id === id);
   let src = it.previa;
-  if (atual.fonte === "banco" && it.temPrevia) {
+  if (atual.fonte === "banco" && it.tipo === "video" && it.previaDrive && API) {
+    src = `${API}/previa?evento=${encodeURIComponent(atual.id)}&item=${encodeURIComponent(id)}`;
+  } else if (atual.fonte === "banco" && it.temPrevia) {
     $("#lb-stage").innerHTML = `<p class="loja__vazio">Carregando…</p>`;
     $("#lb").classList.add("is-open");
     try { src = (it.previaGrande ||= await banco.lerPrevia(id)) || it.previa; } catch {}

@@ -2,8 +2,8 @@
    Painel do Estúdio Benfica
    ?teste=1  → modo de teste (dados só no navegador)
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste, novoId, slug } from "./banco.js?v=202611121919";
-import { prepararFonte, previaFoto, previaVideo } from "./marca.js?v=202611121919";
+import { criarBancoFirebase, criarBancoTeste, novoId, slug } from "./banco.js?v=202611161344";
+import { prepararFonte, previaFoto, previaVideoCompleta } from "./marca.js?v=202611161344";
 
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
@@ -108,10 +108,21 @@ function novoEvento() {
 }
 $("#novo-evento").addEventListener("click", novoEvento);
 
+/* ---------- Link curto ---------- */
+function atualizarCurto() {
+  const f = $("#form-evento"), ap = slug(f.curto.value).slice(0, 40);
+  $("#curto-box").hidden = !(atual?.curto);
+  if (atual?.curto) $("#curto-url").textContent = SITE + atual.curto;
+}
+$("#form-evento [name=curto]").addEventListener("input", (e) => { e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"); });
+$("#copiar-curto").addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#curto-url").textContent); $("#copiar-curto").textContent = "Copiado!"; } catch {} });
+
 function preencherForm(ev) {
   const f = $("#form-evento");
   f.nome.value = ev.nome || ""; f.data.value = ev.data || ""; f.local.value = ev.local || "";
   f.times.value = (ev.times || []).join(", ");
+  f.curto.value = ev.curto || "";
+  atualizarCurto();
   f.querySelector(`[name=visib][value=${ev.id ? estadoEvento(ev) : "oculto"}]`).checked = true;
   const pr = P.mesclar(P.PADRAO, precosGerais || {});
   $("#precos-evento").innerHTML = CAMPOS_ESCOPO.map(([k, r]) => `<label class="adm-campo">${r}<input type="number" step="0.01" min="0" data-escopo="${k}" value="${ev.precos?.escopo?.[k] ?? ""}" placeholder="${pr.escopo[k]}"></label>`).join("");
@@ -163,6 +174,7 @@ $("#form-evento").addEventListener("submit", async (e) => {
     id: atual?.id || (visib === "privado" ? `${slug(f.nome.value).slice(0, 30)}-${novoId(12)}` : `${f.data.value}-${slug(f.nome.value).slice(0, 40)}-${novoId(4)}`),
     nome: f.nome.value.trim(), data: f.data.value, local: f.local.value.trim(),
     times: [...new Set(f.times.value.split(",").map((t) => t.trim()).filter(Boolean))],
+    curto: slug(f.curto.value || f.nome.value).slice(0, 40),
     publico: visib !== "oculto", privado: visib === "privado",
     precos: Object.keys(escopo).length ? { escopo } : {},
     contagem: atual?.contagem || { fotos: 0, videos: 0 }, capa: atual?.capa || "",
@@ -170,6 +182,8 @@ $("#form-evento").addEventListener("submit", async (e) => {
   if (!ev.nome || !ev.data) { msg.textContent = "Preencha nome e data."; return; }
   msg.textContent = "Salvando…";
   try {
+    if (ev.curto.length < 3) ev.curto = "";
+    if (ev.curto && !(await banco.salvarLinkCurto(ev.curto, ev.id, atual?.curto))) { msg.textContent = `O link curto "${ev.curto}" já é de outro evento. Escolha outro.`; return; }
     await banco.salvarEvento(ev);
     await carregarEventos();
     msg.textContent = "Salvo ✓";
@@ -219,13 +233,19 @@ async function enviar(arquivos) {
     const passo = (txt, p) => { st.textContent = txt; barra.style.width = `${Math.round(p * 100)}%`; };
     try {
       const video = f.type.startsWith("video/");
-      passo("gerando prévia…", 0.05);
-      const pv = video ? await previaVideo(f, (p) => passo("gerando prévia…", 0.05 + p * 0.3)) : await previaFoto(f);
-      passo("enviando original ao Drive…", 0.35);
-      const drv = await banco.enviarOriginal(f, `${ev.data} · ${ev.nome}`, (p) => passo("enviando original ao Drive…", 0.35 + p * 0.6));
-      const item = { tipo: video ? "video" : "foto", thumb: pv.thumb, temPrevia: !!pv.previa, time: time || null, atleta: atleta || null,
-        titulo: f.name.replace(/\.[^.]+$/, ""), ordem: ++ordem };
-      const id = await banco.criarItem(ev.id, item, pv.previa, { driveId: drv.id, nome: f.name, mime: f.type, tamanho: f.size });
+      const pasta = `${ev.data} · ${ev.nome}`;
+      passo(video ? "gerando prévia completa (tempo real)…" : "gerando prévia…", 0.02);
+      const pv = video ? await previaVideoCompleta(f, (p) => passo("gerando prévia completa (tempo real)…", 0.02 + p * 0.5)) : await previaFoto(f);
+      let previaDrive = null;
+      if (video) {
+        passo("enviando prévia ao Drive…", 0.52);
+        previaDrive = (await banco.enviarPreviaVideo(pv.blob, pasta, f.name.replace(/\.[^.]+$/, "") + "-previa.webm", (p) => passo("enviando prévia ao Drive…", 0.52 + p * 0.08))).id;
+      }
+      passo("enviando original ao Drive…", 0.6);
+      const drv = await banco.enviarOriginal(f, pasta, (p) => passo("enviando original ao Drive…", 0.6 + p * 0.38));
+      const item = { tipo: video ? "video" : "foto", thumb: pv.thumb, temPrevia: !video && !!pv.previa, time: time || null, atleta: atleta || null,
+        titulo: f.name.replace(/\.[^.]+$/, ""), ordem: ++ordem, ...(video ? { previaDrive, duracao: Math.round(pv.duracao || 0) } : {}) };
+      const id = await banco.criarItem(ev.id, item, video ? null : pv.previa, { driveId: drv.id, nome: f.name, mime: f.type, tamanho: f.size });
       itens.push({ ...item, id });
       passo("pronto ✓", 1); el.classList.add("is-ok");
     } catch (err) {
@@ -249,6 +269,40 @@ async function atualizarResumoEvento() {
   atualizarSelectsTime();
 }
 
+/* ---------- Prévias completas para vídeos já enviados ---------- */
+let regerando = false;
+async function gerarPreviasCompletas() {
+  if (!atual || regerando) return;
+  const pendentes = itens.filter((i) => i.tipo === "video" && !i.previaDrive);
+  if (!pendentes.length) return aviso("Tudo certo", "<p>Todos os vídeos deste evento já têm a prévia completa.</p>");
+  const totalMin = Math.ceil(pendentes.reduce((s, i) => s + (i.duracao || 20), 0) / 60);
+  if (!(await perguntar("Gerar prévias completas?", `<p>${pendentes.length} vídeo(s) vão ganhar a prévia completa com marca d'água.</p>
+    <p class="adm-nota">Cada vídeo é baixado do Drive e gravado em tempo real (cerca de ${totalMin} min no total, se os vídeos forem curtos). <b>Deixe esta aba aberta e visível</b>. Se parar, é só clicar de novo: continua de onde parou.</p>`, { ok: "Começar" }))) return;
+  try { await banco.prepararDrive(); } catch (e) { return aviso("Sem acesso ao Google Drive", `<p>${esc(e.message)}</p>`); }
+  regerando = true;
+  const btn = $("#gerar-previas"); btn.disabled = true;
+  const ev = atual, pasta = `${ev.data} · ${ev.nome}`;
+  const [orig] = [await banco.lerOriginais(pendentes.map((i) => i.id))];
+  let feitos = 0, erros = 0;
+  for (const it of pendentes) {
+    if (atual?.id !== ev.id) break;
+    btn.textContent = `Gerando ${feitos + erros + 1}/${pendentes.length}…`;
+    try {
+      const o = orig.find((x) => x.id === it.id);
+      if (!o?.driveId) throw new Error("sem original no Drive");
+      const blob = await banco.baixarDoDrive(o.driveId);
+      const pv = await previaVideoCompleta(new File([blob], o.nome || it.titulo, { type: o.mime || blob.type }), (p) => (btn.textContent = `Gerando ${feitos + erros + 1}/${pendentes.length} · ${Math.round(p * 100)}%`));
+      const id = (await banco.enviarPreviaVideo(pv.blob, pasta, `${it.titulo || it.id}-previa.webm`)).id;
+      await banco.atualizarItens(ev.id, [it.id], { previaDrive: id, duracao: Math.round(pv.duracao || 0) });
+      it.previaDrive = id; feitos++;
+    } catch (e) { erros++; console.error(it.id, e); }
+  }
+  regerando = false; btn.disabled = false;
+  btn.textContent = "Gerar prévias completas dos vídeos";
+  renderItens();
+  aviso("Prévias geradas", `<p>${feitos} prévia(s) completa(s) criada(s).${erros ? ` ${erros} não deram certo: clique de novo para tentar outra vez.` : ""}</p>`);
+}
+
 /* ---------- Grade de itens ---------- */
 function renderItens() {
   const f = $("#it-filtro").value;
@@ -261,10 +315,14 @@ function renderItens() {
       <span class="adm-item__check">✓</span>
       <figcaption><b>${esc(i.time || "sem time")}</b>${i.atleta ? `<small>${esc(i.atleta)}</small>` : ""}</figcaption>
     </figure>`).join("") : `<p class="adm-nota">Nenhum arquivo ainda. Use a área acima para enviar.</p>`;
+  const semPrevia = itens.filter((i) => i.tipo === "video" && !i.previaDrive).length;
+  $("#gerar-previas").hidden = !(semPrevia || regerando);
+  if (!regerando) $("#gerar-previas").textContent = `Gerar prévias completas dos vídeos (${semPrevia})`;
   $("#barra-sel").hidden = selecionados.size === 0;
   $("#sel-qtd").textContent = `${selecionados.size} selecionado(s)`;
 }
 $("#it-filtro").addEventListener("change", renderItens);
+$("#gerar-previas").addEventListener("click", gerarPreviasCompletas);
 $("#itens").addEventListener("click", (e) => {
   const fig = e.target.closest(".adm-item"); if (!fig) return;
   const id = fig.dataset.id;

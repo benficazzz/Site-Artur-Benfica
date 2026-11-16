@@ -116,13 +116,14 @@
    POST /webhook          aviso do Mercado Pago (o pagamento é sempre reconsultado na API)
    GET  /statusPedido     situação do pedido + lista de arquivos (exige o token do pedido)
    GET  /baixar           entrega o original do Google Drive (pedido pago, dentro do prazo)
+   GET  /previa           prévia completa do vídeo (com marca d'água), só de eventos publicados
    POST /acessoConta      cliente logado (Firebase Auth) recebe acesso aos arquivos das compras dele
 
    Segredos (Cloudflare > Worker > Configurações > Variáveis e segredos):
      MP_ACCESS_TOKEN        Access Token do Mercado Pago (comece pelo de TESTE)
      GOOGLE_SERVICE_ACCOUNT conteúdo inteiro do arquivo JSON da conta de serviço "loja-servidor"
    Variáveis (texto):
-     SITE_URL      https://benficazzz.github.io/Site-Artur-Benfica
+     SITE_URL      https://benficazzz.github.io
    Aviso de venda no Telegram (opcional):
      TELEGRAM_TOKEN   (segredo) token do bot criado no @BotFather
      TELEGRAM_CHAT_ID (texto)   número do seu chat com o bot
@@ -263,7 +264,7 @@ async function criarPagamento(req, env) {
     pacotes: pacotesSrv.map((p) => ({ evento: p.evento, rotulo: p.rotulo, itens: p.itens.map((c) => c.split("/")[1]) })),
   });
 
-  const site = (env.SITE_URL || "https://benficazzz.github.io/Site-Artur-Benfica").replace(/\/$/, "");
+  const site = (env.SITE_URL || "https://benficazzz.github.io").replace(/\/$/, "");
   const voltar = `${site}/loja.html?pedido=${pedidoId}&t=${token}`;
   const mp = await fetch("https://api.mercadopago.com/checkout/preferences", {
     method: "POST",
@@ -298,7 +299,7 @@ async function avisarTelegram(env, texto) {
 function textoVenda(ref, p, pg) {
   const n = linhasDe(p).length;
   const meio = MEIOS[pg.payment_method_id] || MEIOS[pg.payment_type_id] || pg.payment_type_id || "—";
-  return `💰 Venda aprovada!\n\nPedido ${ref.slice(0, 8).toUpperCase()}\nCliente: ${p.nome} (${p.email})\n${n} arquivo(s) · ${Precos.brl(Number(p.total) || 0)}\nPagamento: ${meio}\n\nO cliente já pode baixar. Painel: ${"https://benficazzz.github.io/Site-Artur-Benfica/admin.html#pedidos"}`;
+  return `💰 Venda aprovada!\n\nPedido ${ref.slice(0, 8).toUpperCase()}\nCliente: ${p.nome} (${p.email})\n${n} arquivo(s) · ${Precos.brl(Number(p.total) || 0)}\nPagamento: ${meio}\n\nO cliente já pode baixar. Painel: ${"https://benficazzz.github.io/admin.html#pedidos"}`;
 }
 
 async function webhook(req, env) {
@@ -399,6 +400,23 @@ async function baixar(u, env) {
   return new Response(r.body, { headers: { "Content-Type": orig.mime || r.headers.get("Content-Type") || "application/octet-stream", "Content-Disposition": `attachment; filename="${nome}"`, ...(r.headers.get("Content-Length") ? { "Content-Length": r.headers.get("Content-Length") } : {}) } });
 }
 
+/* ---------------- prévia completa de vídeo (com marca d'água), vinda do Drive ---------------- */
+async function previaVideo(req, u, env) {
+  const ev = u.searchParams.get("evento"), it = u.searchParams.get("item");
+  if (!ev || !it || /[\/]/.test(ev + it)) return new Response("Prévia não encontrada.", { status: 404 });
+  const evento = await lerDoc(env, `eventos/${encodeURIComponent(ev)}`);
+  if (!evento || evento.publico !== true) return new Response("Prévia não encontrada.", { status: 404 });
+  const item = await lerDoc(env, `eventos/${encodeURIComponent(ev)}/itens/${encodeURIComponent(it)}`);
+  if (!item?.previaDrive) return new Response("Prévia não encontrada.", { status: 404 });
+  const range = req.headers.get("Range");
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(item.previaDrive)}?alt=media`, {
+    headers: { Authorization: `Bearer ${await tokenGoogle(env)}`, ...(range ? { Range: range } : {}) } });
+  if (!r.ok && r.status !== 206) return new Response("Prévia indisponível no momento.", { status: 502 });
+  const h = new Headers({ "Content-Type": r.headers.get("Content-Type") || "video/webm", "Accept-Ranges": "bytes", "Cache-Control": "public, max-age=3600" });
+  ["Content-Length", "Content-Range"].forEach((k) => r.headers.get(k) && h.set(k, r.headers.get(k)));
+  return new Response(r.body, { status: r.status, headers: h });
+}
+
 /* ---------------- roteador ---------------- */
 export default {
   async fetch(req, env) {
@@ -411,6 +429,7 @@ export default {
       else if (u.pathname === "/statusPedido") r = await statusPedido(u, env);
       else if (u.pathname === "/acessoConta" && req.method === "POST") r = await acessoConta(req, env);
       else if (u.pathname === "/baixar") r = await baixar(u, env);
+      else if (u.pathname === "/previa") r = await previaVideo(req, u, env);
       else if (u.pathname === "/testeAviso") {
         // teste do aviso: /testeAviso?chat=<TELEGRAM_CHAT_ID>
         const ok = env.TELEGRAM_CHAT_ID && u.searchParams.get("chat") === String(env.TELEGRAM_CHAT_ID) && await avisarTelegram(env, "✅ Aviso de vendas do Estúdio Benfica ligado! Você vai receber uma mensagem aqui a cada pagamento aprovado.");

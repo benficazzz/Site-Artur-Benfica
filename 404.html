@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Estúdio Benfica</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #07080b; color: #f5f7fa; font: 16px/1.6 Inter, system-ui, sans-serif; text-align: center; padding: 24px; }
+    a { color: #c8ff1a; font-weight: 600; }
+    h1 { font-size: 1.6rem; margin: 0 0 8px; }
+  </style>
+  <script>
+    /* Links curtos: benficazzz.github.io/<apelido> → loja do evento.
+       Também leva endereços antigos (/Site-Artur-Benfica/...) para o endereço novo. */
+    (function () {
+      var p = location.pathname, base = "/";
+      if (p.indexOf("/Site-Artur-Benfica/") === 0) { base = "/Site-Artur-Benfica/"; }
+      var apelido = decodeURIComponent(p.slice(base.length)).replace(/\/+$/, "").toLowerCase();
+      if (!/^[a-z0-9-]{3,40}$/.test(apelido)) return;
+      var url = "https://firestore.googleapis.com/v1/projects/estudio-benfica/databases/(default)/documents/links/" + apelido + "?key=AIzaSyBFb0wFFU4q2YNRlW2aEHpVJ4_lnyKLwIU";
+      fetch(url).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+        var ev = d && d.fields && d.fields.evento && d.fields.evento.stringValue;
+        if (ev) location.replace(base + "loja.html#evento/" + encodeURIComponent(ev));
+        else document.documentElement.classList.add("nao-achou");
+      }).catch(function () { document.documentElement.classList.add("nao-achou"); });
+    })();
+  </script>
+</head>
+<body>
+  <main>
+    <h1>Página não encontrada</h1>
+    <p>Esse endereço não existe ou o evento saiu do ar.</p>
+    <p><a href="/">Ir para o site</a> · <a href="/loja.html">Ver a loja</a></p>
+  </main>
+</body>
+</html>
