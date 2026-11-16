@@ -3,7 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161901";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161911";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;
@@ -24,7 +24,7 @@ const filtro = { time: "", atleta: "", tipo: "" };
 const KEY = "eb-carrinho-v1";
 let carrinho = { itens: [], pacotes: [] };
 try { carrinho = JSON.parse(localStorage.getItem(KEY)) || carrinho; } catch {}
-const salvar = () => { try { localStorage.setItem(KEY, JSON.stringify(carrinho)); } catch {} };
+const salvar = () => { try { localStorage.setItem(KEY, JSON.stringify(carrinho)); } catch {} if (!carrinho.itens.length && !carrinho.pacotes.length) { const l = document.getElementById("lembrete"); if (l) l.hidden = true; } };
 
 /* ---------- Dados ---------- */
 async function carregar() {
@@ -367,8 +367,10 @@ function rota() {
 }
 
 /* ---------- Visualizar ---------- */
+let lbId = null;
 async function ampliar(id) {
   const it = atual.itens.find((x) => x.id === id);
+  lbId = id; atualizarLb();
   let src = it.previa;
   if (atual.fonte === "banco" && it.tipo === "video" && it.previaDrive && API) {
     src = `${API}/previa?evento=${encodeURIComponent(atual.id)}&item=${encodeURIComponent(id)}`;
@@ -382,7 +384,59 @@ async function ampliar(id) {
   $("#lb-cap").textContent = [it.titulo, it.atleta, it.time].filter(Boolean).join(" · ");
   $("#lb").classList.add("is-open"); $("#lb").setAttribute("aria-hidden", "false");
 }
-const fecharLb = () => { $("#lb").classList.remove("is-open"); $("#lb").setAttribute("aria-hidden", "true"); $("#lb-stage").innerHTML = ""; };
+const fecharLb = () => { $("#lb").classList.remove("is-open"); $("#lb").setAttribute("aria-hidden", "true"); $("#lb-stage").innerHTML = ""; lbId = null; };
+/* lightbox: anterior/próxima (botões, setas do teclado e deslizar o dedo) e adicionar ao carrinho */
+function atualizarLb() {
+  if (!lbId) return;
+  const lista = visiveis(), k = lista.findIndex((x) => x.id === lbId);
+  $("#lb-ant").hidden = k <= 0; $("#lb-prox").hidden = k < 0 || k >= lista.length - 1;
+  const b = $("#lb-add"), coberto = idsCobertos().has(lbId), no = carrinho.itens.some((x) => x.id === lbId);
+  b.disabled = coberto;
+  b.textContent = coberto ? "✓ Já está no seu pacote" : no ? "✓ No carrinho · tocar para remover" : `Adicionar ao carrinho · ${brl(precosDe(atual)[(atual.itens.find((x) => x.id === lbId) || {}).tipo || "foto"].avulso)}`;
+  b.classList.toggle("btn--lime", !no && !coberto); b.classList.toggle("btn--ghost", no || coberto);
+}
+function passoLb(d) {
+  const lista = visiveis(), k = lista.findIndex((x) => x.id === lbId);
+  const prox = lista[k + d]; if (prox) ampliar(prox.id);
+}
+$("#lb-ant").addEventListener("click", () => passoLb(-1));
+$("#lb-prox").addEventListener("click", () => passoLb(1));
+$("#lb-add").addEventListener("click", () => { if (lbId) { alternarItem(lbId); atualizarLb(); } });
+addEventListener("keydown", (e) => { if (!lbId) return; if (e.key === "ArrowLeft") passoLb(-1); else if (e.key === "ArrowRight") passoLb(1); else if (e.key === "Escape") fecharLb(); });
+{ let x0 = null, y0 = 0;
+  $("#lb").addEventListener("touchstart", (e) => { if (e.target.closest("video")) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  $("#lb").addEventListener("touchend", (e) => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) passoLb(dx < 0 ? 1 : -1); }, { passive: true });
+}
+
+/* compartilhar o evento (menu nativo do celular; no computador, copia o link) */
+$("#compartilhar").addEventListener("click", async () => {
+  const site = location.origin + location.pathname.replace(/loja\.html$/, "");
+  const url = atual.curto ? site + atual.curto : site + "loja.html#evento/" + encodeURIComponent(atual.id);
+  const dados = { title: atual.nome + " · Estúdio Benfica", text: `Fotos e vídeos de ${atual.nome}. Encontre as suas:`, url };
+  const b = $("#compartilhar");
+  try {
+    if (navigator.share) await navigator.share(dados);
+    else { await navigator.clipboard.writeText(url); b.textContent = "Link copiado ✓"; setTimeout(() => (b.textContent = "Compartilhar evento"), 2200); }
+  } catch {}
+});
+
+/* lembrete de carrinho esquecido */
+function lembrete() {
+  const n = carrinho.itens.length + carrinho.pacotes.length;
+  let fechado = false; try { fechado = sessionStorage.getItem("lembreteX") === "1"; } catch {}
+  $("#lembrete").hidden = !n || fechado || !!new URLSearchParams(location.search).get("pedido");
+  if (n) $("#lembrete-txt").textContent = carrinho.pacotes.length && !carrinho.itens.length ? `Você deixou ${n} pacote(s)` : `Você deixou ${n} ${n === 1 ? "item" : "itens"}`;
+}
+$("#lembrete-ver").addEventListener("click", () => abrirCarrinho());
+$("#lembrete-x").addEventListener("click", () => { $("#lembrete").hidden = true; try { sessionStorage.setItem("lembreteX", "1"); } catch {} });
+lembrete();
+
+/* WhatsApp da loja */
+{ const w = (window.SITE_CONFIG || {}).whatsapp, a = $("#wa-loja");
+  if (w) a.href = `https://wa.me/${w}?text=${encodeURIComponent("Olá, Artur! Tenho uma dúvida sobre a loja de fotos.")}`; else a.hidden = true;
+  a.target = "_blank"; a.rel = "noopener"; }
+
 
 /* ---------- Eventos da página ---------- */
 $("#busca-evento").addEventListener("input", telaEventos);
