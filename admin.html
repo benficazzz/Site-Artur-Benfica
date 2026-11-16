@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=202611121919" />
-  <link rel="stylesheet" href="css/admin.css?v=202611121919" />
+  <link rel="stylesheet" href="css/style.css?v=202611161344" />
+  <link rel="stylesheet" href="css/admin.css?v=202611161344" />
 </head>
 <body class="admin is-ready">
   <header class="adm-topo">
@@ -70,6 +70,8 @@
               <label class="adm-campo">Data<input name="data" type="date" required></label>
               <label class="adm-campo">Local<input name="local" maxlength="60" placeholder="Ex.: Betim · MG"></label>
               <label class="adm-campo adm-campo--2">Times (separados por vírgula)<input name="times" maxlength="400" placeholder="Ex.: Cassino FC, Lazio MTR"></label>
+              <label class="adm-campo adm-campo--2">Link curto (para compartilhar)<input name="curto" maxlength="40" placeholder="Ex.: f5-league" pattern="[a-z0-9-]{3,40}"></label>
+              <div class="adm-campo adm-campo--2 adm-curto" id="curto-box" hidden><span>Link para compartilhar:</span><code id="curto-url"></code><button type="button" class="btn btn--ghost btn--small" id="copiar-curto">Copiar</button></div>
             </div>
             <fieldset class="adm-visib">
               <legend>Visibilidade</legend>
@@ -114,6 +116,7 @@
               <h2>Arquivos do evento <small id="it-contagem"></small></h2>
               <select id="it-filtro" aria-label="Filtrar por time"><option value="">Todos os times</option></select>
             </div>
+            <button class="btn btn--blue btn--small" id="gerar-previas" hidden>Gerar prévias completas dos vídeos</button>
             <div class="adm-barra-sel" id="barra-sel" hidden>
               <b id="sel-qtd"></b>
               <select id="sel-time" aria-label="Definir time"><option value="">Definir time…</option></select>
@@ -166,8 +169,8 @@
     </form>
   </dialog>
 
-  <script src="js/firebase-config.js?v=202611121919"></script>
-  <script src="js/precos.js?v=202611121919"></script>
-  <script type="module" src="js/admin.js?v=202611121919"></script>
+  <script src="js/firebase-config.js?v=202611161344"></script>
+  <script src="js/precos.js?v=202611161344"></script>
+  <script type="module" src="js/admin.js?v=202611161344"></script>
 </body>
 </html>

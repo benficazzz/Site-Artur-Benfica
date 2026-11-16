@@ -6,6 +6,7 @@
 export const ADMIN_EMAIL = "arturbenfica5@gmail.com";
 const V = "10.12.2";
 const DRIVE_PASTA_RAIZ = "Loja Estúdio Benfica · Originais";
+const DRIVE_PASTA_PREVIAS = "Loja Estúdio Benfica · Prévias";
 const ESCOPO_DRIVE = "https://www.googleapis.com/auth/drive.file";
 
 export const novoId = (n = 20) => {
@@ -63,20 +64,20 @@ export async function criarBancoFirebase(config) {
   }
 
   /** Dá ao servidor de pagamento (conta de serviço) acesso de leitura à pasta dos originais, para entregar após o pagamento. */
-  let servidorLiberado = false;
+  const servidorLiberado = new Set();
   async function liberarParaServidor(pastaId) {
     const email = window.LOJA_SERVIDOR_EMAIL;
-    if (!email || servidorLiberado) return;
+    if (!email || servidorLiberado.has(pastaId)) return;
     try {
       await drive(`/drive/v3/files/${pastaId}/permissions?sendNotificationEmail=false&fields=id`, { method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: "reader", type: "user", emailAddress: email }) });
-      servidorLiberado = true;
+      servidorLiberado.add(pastaId);
     } catch (e) { console.warn("Não consegui liberar a pasta para o servidor", e); }
   }
 
   /** Envia o original para o Drive (envio retomável, com progresso). */
-  async function enviarOriginal(arquivo, nomeEvento, aoProgresso = () => {}) {
-    const raiz = await pasta(DRIVE_PASTA_RAIZ);
+  async function enviarOriginal(arquivo, nomeEvento, aoProgresso = () => {}, raizNome = DRIVE_PASTA_RAIZ) {
+    const raiz = await pasta(raizNome);
     await liberarParaServidor(raiz);
     const destino = await pasta(nomeEvento, raiz);
     const token = await tokenDrive();
@@ -165,6 +166,14 @@ export async function criarBancoFirebase(config) {
     atualizarPedido: (id, patch) => fs.updateDoc(doc("pedidos", id), patch),
     lerOriginais: async (ids) => Promise.all(ids.map(async (id) => ({ id, ...((await fs.getDoc(doc("originais", id))).data() || {}) }))),
     enviarOriginal,
+    /** Prévia completa de vídeo (com marca d'água) → pasta "Prévias" no Drive. */
+    enviarPreviaVideo: (blob, nomeEvento, nome, aoProgresso) => enviarOriginal(new File([blob], nome, { type: blob.type || "video/webm" }), nomeEvento, aoProgresso, DRIVE_PASTA_PREVIAS),
+    /** Baixa um original do Drive (para regenerar prévias). */
+    async baixarDoDrive(driveId) {
+      const r = await fetch(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(driveId)}?alt=media`, { headers: { Authorization: `Bearer ${await tokenDrive()}` } });
+      if (!r.ok) throw new Error(`Não consegui baixar o original do Drive (${r.status}).`);
+      return r.blob();
+    },
     prepararDrive: () => tokenDrive(),
     /** Libera o original para quem tiver o link e devolve o endereço de download. */
     async compartilharOriginal(driveId) {
@@ -175,6 +184,14 @@ export async function criarBancoFirebase(config) {
     async criarPedido(p) { const r = await fs.addDoc(col("pedidos"), { ...p, email: String(p.email || "").toLowerCase(), status: "novo", criadoEm: fs.serverTimestamp() }); return r.id; },
     listarEventosPublicos: () => lista(fs.query(col("eventos"), fs.where("publico", "==", true), fs.where("privado", "==", false))),
     lerEvento: async (id) => { const s = await fs.getDoc(doc("eventos", id)); return s.exists() ? { id: s.id, ...s.data() } : null; },
+    /** Link curto: links/{apelido} → { evento }. Devolve false se o apelido já é de outro evento. */
+    async salvarLinkCurto(apelido, eventoId, antigo) {
+      const s = await fs.getDoc(doc("links", apelido));
+      if (s.exists() && s.data().evento !== eventoId) return false;
+      await fs.setDoc(doc("links", apelido), { evento: eventoId });
+      if (antigo && antigo !== apelido) { try { await fs.deleteDoc(doc("links", antigo)); } catch {} }
+      return true;
+    },
   };
 }
 
@@ -215,9 +232,12 @@ export function criarBancoTeste() {
     lerOriginais: async (ids) => ids.map((id) => ({ id, ...(d.originais[id] || {}) })),
     async enviarOriginal(arquivo, _ev, aoProgresso = () => {}) { for (let p = 0; p <= 1; p += 0.25) { aoProgresso(p); await espera(); } return { id: "teste-" + novoId(8), name: arquivo.name, mimeType: arquivo.type, size: arquivo.size }; },
     prepararDrive: async () => true,
+    async enviarPreviaVideo(blob, _ev, nome, aoProgresso = () => {}) { aoProgresso(1); return { id: "previa-" + novoId(8), name: nome }; },
+    async baixarDoDrive() { throw new Error("No modo de teste não há originais no Drive."); },
     async compartilharOriginal(driveId) { return `https://drive.google.com/file/d/${driveId}/view`; },
     async criarPedido(p) { const id = novoId(); d.pedidos[id] = { id, ...p, status: "novo", criadoEm: Date.now() }; gravar(); return id; },
     listarEventosPublicos: async () => Object.values(d.eventos).filter((e) => e.publico && !e.privado),
     lerEvento: async (id) => d.eventos[id] || null,
+    async salvarLinkCurto(apelido, eventoId, antigo) { d.links ||= {}; if (d.links[apelido] && d.links[apelido] !== eventoId) return false; d.links[apelido] = eventoId; if (antigo && antigo !== apelido) delete d.links[antigo]; gravar(); return true; },
   };
 }

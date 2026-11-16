@@ -158,3 +158,59 @@ export async function previaVideo(arquivo, aoProgresso = () => {}) {
     URL.revokeObjectURL(url);
   }
 }
+
+/**
+ * Vídeo → prévia COMPLETA com marca d'água (480p, sem áudio), para guardar no Google Drive.
+ * Grava em tempo real: um vídeo de 1 minuto leva cerca de 1 minuto. A aba precisa ficar visível.
+ * Retorna { blob, tipo, thumb, duracao }.
+ */
+export async function previaVideoCompleta(arquivo, aoProgresso = () => {}) {
+  const url = URL.createObjectURL(arquivo);
+  const v = document.createElement("video");
+  v.muted = true; v.playsInline = true; v.preload = "auto"; v.src = url;
+  try {
+    await new Promise((ok, erro) => { v.onloadedmetadata = ok; v.onerror = () => erro(new Error(`Não consegui abrir o vídeo "${arquivo.name || "vídeo"}".`)); });
+    const dur = v.duration || 0;
+    v.currentTime = Math.min(dur / 3, 2);
+    await new Promise((ok) => (v.onseeked = ok));
+    const thumb = await versao(v, v.videoWidth, v.videoHeight, 480, [0.72, 0.6], 60 * 1024);
+
+    const tipo = ["video/webm;codecs=vp9", "video/webm;codecs=vp8", "video/webm", "video/mp4"].find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported(t));
+    if (!tipo) throw new Error("Este navegador não grava vídeo. Use o Google Chrome no computador.");
+    const esc = Math.min(1, 854 / Math.max(v.videoWidth, v.videoHeight));
+    const c = canvasDe(v.videoWidth * esc, v.videoHeight * esc);
+    const ctx = c.getContext("2d");
+    v.currentTime = 0;
+    await new Promise((ok) => (v.onseeked = ok));
+    // primeiro quadro já desenhado antes de começar a gravar
+    ctx.drawImage(v, 0, 0, c.width, c.height); aplicarMarca(ctx, c.width, c.height);
+    const rec = new MediaRecorder(c.captureStream(25), { mimeType: tipo, videoBitsPerSecond: 900_000 });
+    const partes = [];
+    rec.ondataavailable = (e) => e.data.size && partes.push(e.data);
+    const fim = new Promise((ok) => (rec.onstop = ok));
+    rec.start(1000);
+    await new Promise((ok) => setTimeout(ok, 150));
+    await v.play();
+    await new Promise((ok) => {
+      const proximo = v.requestVideoFrameCallback ? (f) => v.requestVideoFrameCallback(f) : (f) => requestAnimationFrame(f);
+      const quadro = () => {
+        ctx.drawImage(v, 0, 0, c.width, c.height);
+        aplicarMarca(ctx, c.width, c.height);
+        aoProgresso(dur ? Math.min(1, v.currentTime / dur) : 0);
+        if (v.ended || (dur && v.currentTime >= dur - 0.05)) return ok();
+        proximo(quadro);
+      };
+      v.onended = () => ok();
+      quadro();
+    });
+    // segura o último quadro um instante para o gravador fechar o vídeo inteiro
+    ctx.drawImage(v, 0, 0, c.width, c.height); aplicarMarca(ctx, c.width, c.height);
+    await new Promise((ok) => setTimeout(ok, 600));
+    v.pause(); rec.stop(); await fim;
+    const blob = new Blob(partes, { type: tipo.split(";")[0] });
+    if (blob.size < 2048) throw new Error("O navegador não conseguiu gravar a prévia. Deixe a aba visível e tente de novo.");
+    return { blob, tipo: blob.type, thumb: thumb.url, duracao: dur };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}

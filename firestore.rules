@@ -38,6 +38,12 @@ service cloud.firestore {
       allow read, write: if admin();
     }
 
+    // Links curtos (benficazzz.github.io/apelido → evento)
+    match /links/{apelido} {
+      allow read: if true;
+      allow write: if admin();
+    }
+
     // Preços: leitura pública, edição só do admin
     match /config/{doc} {
       allow read: if true;

@@ -5,14 +5,14 @@ Responder sempre em **português do Brasil**, com tom profissional e prático. P
 publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, números, depoimentos).
 
 ## Onde está cada coisa
-- **Site no ar:** https://benficazzz.github.io/Site-Artur-Benfica/ (GitHub Pages, branch `main`, pasta raiz)
+- **Site no ar:** https://benficazzz.github.io/ depois que o repositório for renomeado para `benficazzz.github.io` (antes: /Site-Artur-Benfica/). A pasta `Site-Artur-Benfica/` só redireciona os endereços antigos
 - **Repositório:** `benficazzz/Site-Artur-Benfica`. O trabalho é feito numa branch e entra no `main` por pull request, que o Artur aprova
 - **Prévia privada (Artifact):** https://claude.ai/artifact/KFZPsodipSeN2oppxZSA5A
 - Stack: HTML + CSS + JS puro, sem etapa de build
 - Arquivos principais: `index.html`, `css/style.css`, `js/main.js`, `js/config.js` (contatos)
 - Loja: `loja.html`, `css/loja.css`, `js/loja.js`, `js/precos.js`, `js/loja-demo.js`, `data/catalogo.json` (ainda não existe; é gerado)
 - Servidor de pagamento: `worker/loja-worker.js` (Cloudflare Worker, gerado por `ferramentas/montar_worker.py` a partir de `worker/src.js` + `js/precos.js`). Guia em `PAGAMENTO.md`. A pasta `functions/` (Cloud Functions) ficou como alternativa caso o Blaze seja ativado
-- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `PAGAMENTO.md`, `assets/logo/LEIA-ME.md`
+- Guias: `README.md`, `LOJA.md`, `ADMIN.md`, `PAGAMENTO.md`, `HISTORICO.md`, `PROXIMOS-PASSOS.md`, `assets/logo/LEIA-ME.md`
 
 ## Identidade
 - Marca: **Estúdio Benfica**. Logo aprovado: conceito **01 · Visor** (cantos do visor de câmera + play verde-limão)
@@ -70,6 +70,11 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Download pela conta: Worker `POST /acessoConta` (verifica o ID token do Firebase) → token de 24 h → `/baixar`. Pela conta não há prazo; pelo link do checkout, 30 dias
 - E-mails dos pedidos são gravados em minúsculas. Pedidos do WhatsApp (sem `linhas`) também funcionam
 - Testes: 31 regras no emulador, 27 verificações no Worker, página no computador e iPhone
+
+## Vídeos e links curtos
+- Prévia de vídeo = vídeo COMPLETO, 480p, com marca d'água, gerado no navegador (`previaVideoCompleta` em `js/marca.js`, em tempo real) e guardado no Drive, na pasta "Loja Estúdio Benfica · Prévias". Item: `previaDrive`, `duracao`. O Worker entrega em `GET /previa?evento=&item=` (aceita Range, só para eventos publicados)
+- Painel: botão "Gerar prévias completas dos vídeos" para vídeos antigos (baixa o original do Drive e regrava)
+- Link curto por evento: campo `curto` + coleção `links/{apelido}` → `{evento}`. `404.html` resolve `/<apelido>` e redireciona para `loja.html#evento/<id>`
 
 ## Outros
 - Aviso de venda no Telegram: LIGADO e testado (bot "Venda Lojinha Benfica", chat 5206927383). Segredo `TELEGRAM_TOKEN` e texto `TELEGRAM_CHAT_ID` no Worker; teste em `/testeAviso?chat=5206927383`
