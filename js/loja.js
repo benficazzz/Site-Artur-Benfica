@@ -3,7 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161413";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161428";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;
@@ -92,8 +92,10 @@ async function abrirEvento(id) {
     mostrar("tela-evento");
     $("#ev-nome").textContent = atual.nome;
     $("#lista-itens").innerHTML = `<p class="loja__vazio">Carregando fotos…</p>`;
-    const its = await banco.listarItens(atual.id);
-    atual.itens = its.map((i) => ({ ...i, previa: i.thumb }));
+    // carrega em partes: as primeiras fotos aparecem logo, o resto chega por trás
+    const ev = atual, prim = await banco.listarItensPagina(ev.id, 24);
+    ev.itens = prim.map((i) => ({ ...i, previa: i.thumb }));
+    if (prim.length === 24) carregarResto(ev, prim[prim.length - 1].ordem);
   }
   filtro.time = filtro.atleta = filtro.tipo = "";
   mostrar("tela-evento");
@@ -107,8 +109,41 @@ async function abrirEvento(id) {
   $$("#f-tipo button").forEach((b) => { b.classList.toggle("is-active", b.dataset.tipo === ""); b.hidden = !temVideo && b.dataset.tipo === "video"; });
   $("#f-tipo").hidden = !temVideo;
   renderEvento();
+  dica();
   window.scrollTo({ top: 0 });
 }
+
+async function carregarResto(ev, depois) {
+  ev.carregando = true;
+  try {
+    for (;;) {
+      const pg = await banco.listarItensPagina(ev.id, 60, depois);
+      if (!pg.length) break;
+      ev.itens.push(...pg.map((i) => ({ ...i, previa: i.thumb })));
+      depois = pg[pg.length - 1].ordem;
+      if (atual === ev && !$("#tela-evento").hidden) { atualizarFiltros(); renderEvento(); }
+      if (pg.length < 60) break;
+    }
+  } catch (e) { console.error(e); }
+  ev.carregando = false;
+}
+
+function atualizarFiltros() {
+  const times = [...new Set(atual.itens.map((i) => i.time).filter(Boolean))];
+  $("#f-time").innerHTML = `<option value="">Todos os times</option>` + times.map((t) => `<option>${esc(t)}</option>`).join("");
+  $("#f-time").value = filtro.time; $("#f-time").hidden = times.length < 1;
+  atualizarAtletas(); $("#f-atleta").value = filtro.atleta;
+  const temVideo = atual.itens.some((i) => i.tipo === "video");
+  $$("#f-tipo button").forEach((b) => { b.hidden = !temVideo && b.dataset.tipo === "video"; });
+  $("#f-tipo").hidden = !temVideo;
+}
+
+function dica() {
+  const el = $("#dica-sel"); let vista = false;
+  try { vista = localStorage.getItem("dicaSel") === "1"; } catch {}
+  el.hidden = vista;
+}
+$("#dica-ok").addEventListener("click", () => { $("#dica-sel").hidden = true; try { localStorage.setItem("dicaSel", "1"); } catch {} });
 
 function atualizarAtletas() {
   const atletas = [...new Set(atual.itens.filter((i) => !filtro.time || i.time === filtro.time).map((i) => i.atleta).filter(Boolean))];
@@ -125,17 +160,22 @@ function renderEvento() {
   const cobertos = idsCobertos();
   const sel = new Set(carrinho.itens.map((i) => i.id));
   $("#ev-contagem").textContent = `${lista.length} ${lista.length === 1 ? "item" : "itens"}`;
-  $("#lista-itens").innerHTML = lista.map((i) => `
+  const box = $("#lista-itens"), ja = box.querySelectorAll(".item");
+  const mesmo = ja.length && ja.length <= lista.length && [...ja].every((f, k) => f.dataset.id === lista[k].id);
+  const novos = mesmo ? lista.slice(ja.length) : lista;
+  const html = novos.map((i) => `
     <figure class="item ${cobertos.has(i.id) ? "is-coberto" : sel.has(i.id) ? "is-sel" : ""}" data-id="${esc(i.id)}">
       ${i.tipo === "video" && !String(i.previa).startsWith("data:image")
         ? `<video src="${esc(i.previa)}" muted loop playsinline preload="metadata"></video>`
         : `<img src="${esc(i.previa)}" alt="${esc(i.titulo || "")}" loading="lazy" decoding="async">`}
       <button class="item__sel" aria-label="Selecionar ${esc(i.titulo || "")}"></button>
       <button class="item__ver" aria-label="Ampliar">⤢</button>
-      <span class="item__check" aria-hidden="true">✓</span>
+      <span class="item__check" aria-hidden="true"><i>+</i><b>✓</b></span>
       <figcaption class="item__info"><span>${esc(i.atleta || i.time || "")}</span><span class="item__tipo">${i.tipo === "video" ? "VÍDEO" : "FOTO"} · ${brl(precosDe(atual)[i.tipo].avulso)}</span></figcaption>
     </figure>`).join("");
-  $$("#lista-itens video").forEach((v) => { v.addEventListener("mouseenter", () => v.play()); v.addEventListener("mouseleave", () => v.pause()); });
+  if (mesmo) box.insertAdjacentHTML("beforeend", html); else box.innerHTML = html || `<p class="loja__vazio">${atual.carregando ? "Carregando mais…" : "Nada por aqui com esse filtro."}</p>`;
+  if (mesmo) $$(".item", box).forEach((f) => { const id = f.dataset.id; f.classList.toggle("is-coberto", cobertos.has(id)); f.classList.toggle("is-sel", !cobertos.has(id) && sel.has(id)); });
+  $$("#lista-itens video:not([data-ok])").forEach((v) => { v.dataset.ok = 1; v.addEventListener("mouseenter", () => v.play()); v.addEventListener("mouseleave", () => v.pause()); });
   renderPacotes();
 }
 
@@ -357,6 +397,7 @@ $("#sel-todos").addEventListener("click", () => {
 });
 $("#lista-itens").addEventListener("click", (e) => {
   const fig = e.target.closest(".item"); if (!fig) return;
+  if (!e.target.closest(".item__ver")) $("#dica-ok").click();
   if (e.target.closest(".item__ver")) ampliar(fig.dataset.id); else alternarItem(fig.dataset.id);
 });
 $("#abrir-carrinho").addEventListener("click", abrirCarrinho);

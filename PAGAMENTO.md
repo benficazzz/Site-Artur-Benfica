@@ -82,3 +82,11 @@ A cada pagamento aprovado, o servidor manda uma mensagem para você com o códig
 
 ## Atualizações do site
 Antes de publicar mudanças em CSS/JS, rode `python3 ferramentas/versao.py` (carimba a versão nos arquivos e evita cache antigo).
+
+## E-mail com o link das fotos (EmailJS, grátis até 200/mês)
+Quando o pagamento é aprovado, o Worker manda ao cliente um e-mail com o link de download (válido 30 dias) e o endereço da Minha conta.
+- Variáveis de texto no Worker: `EMAILJS_SERVICE`, `EMAILJS_TEMPLATE`, `EMAILJS_PUBLIC`. Segredo: `EMAILJS_PRIVATE`
+- No EmailJS: Account → Security → marcar "Allow EmailJS API for non-browser applications"
+- Parâmetros do modelo: `to_email`, `nome`, `pedido`, `total`, `qtd`, `itens`, `link`, `conta`, `dias`
+- Teste: `/testeEmail?chat=<TELEGRAM_CHAT_ID>&para=<e-mail>`
+- Sem as variáveis, nada muda (o e-mail simplesmente não é enviado)
