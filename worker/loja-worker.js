@@ -127,6 +127,11 @@
    Aviso de venda no Telegram (opcional):
      TELEGRAM_TOKEN   (segredo) token do bot criado no @BotFather
      TELEGRAM_CHAT_ID (texto)   número do seu chat com o bot
+   E-mail com o link das fotos (EmailJS, opcional):
+     EMAILJS_SERVICE  (texto)   Service ID   (ex.: service_xxxxxxx)
+     EMAILJS_TEMPLATE (texto)   Template ID  (ex.: template_xxxxxxx)
+     EMAILJS_PUBLIC   (texto)   Public Key   (Account > General)
+     EMAILJS_PRIVATE  (segredo) Private Key  (Account > General)
    ========================================================= */
 const Precos = globalThis.Precos;
 const PROJETO = "estudio-benfica";
@@ -302,6 +307,31 @@ function textoVenda(ref, p, pg) {
   return `💰 Venda aprovada!\n\nPedido ${ref.slice(0, 8).toUpperCase()}\nCliente: ${p.nome} (${p.email})\n${n} arquivo(s) · ${Precos.brl(Number(p.total) || 0)}\nPagamento: ${meio}\n\nO cliente já pode baixar. Painel: ${"https://benficazzz.github.io/admin.html#pedidos"}`;
 }
 
+/* ---------------- e-mail com o link das fotos (EmailJS, opcional) ---------------- */
+async function enviarEmailJS(env, params) {
+  if (!env.EMAILJS_SERVICE || !env.EMAILJS_TEMPLATE || !env.EMAILJS_PUBLIC || !env.EMAILJS_PRIVATE) return false;
+  try {
+    const r = await fetch("https://api.emailjs.com/api/v1.0/email/send", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ service_id: env.EMAILJS_SERVICE, template_id: env.EMAILJS_TEMPLATE, user_id: env.EMAILJS_PUBLIC, accessToken: env.EMAILJS_PRIVATE, template_params: params }) });
+    if (!r.ok) console.error("EmailJS recusou", r.status, await r.text());
+    return r.ok;
+  } catch (e) { console.error("EmailJS", e); return false; }
+}
+async function enviarEmailCompra(env, ref, p) {
+  if (!p.email) return false;
+  // link novo e exclusivo do e-mail (o do checkout só existe no navegador do cliente)
+  const t = tokenAleatorio(24);
+  await atualizarDoc(env, `pedidos/${ref}`, { tokenEmailHash: await sha256(t) });
+  const site = (env.SITE_URL || "https://benficazzz.github.io").replace(/\/$/, "");
+  const linhas = linhasDe(p);
+  return enviarEmailJS(env, {
+    to_email: p.email, nome: String(p.nome || "").split(" ")[0] || "cliente",
+    pedido: ref.slice(0, 8).toUpperCase(), total: Precos.brl(Number(p.total) || 0), qtd: String(linhas.length),
+    itens: linhas.slice(0, 30).map((l) => `${l.tipo === "video" ? "🎬" : "📷"} ${l.titulo || l.chave}`).join("\n") + (linhas.length > 30 ? `\n… e mais ${linhas.length - 30}` : ""),
+    link: `${site}/loja.html?pedido=${ref}&t=${t}`, conta: `${site}/conta.html`, dias: String(DIAS_DOWNLOAD),
+  });
+}
+
 async function webhook(req, env) {
   const u = new URL(req.url);
   const corpo = await req.json().catch(() => ({}));
@@ -319,7 +349,11 @@ async function webhook(req, env) {
   const novo = pg.status === "approved" && Math.abs(Number(pg.transaction_amount) - p.total) < 0.01 && pg.currency_id === "BRL" ? "pago"
     : ["rejected", "cancelled", "refunded", "charged_back"].includes(pg.status) ? "cancelado" : "aguardando";
   await atualizarDoc(env, `pedidos/${ref}`, { status: novo, mpPagamento: String(pg.id), mpStatus: String(pg.status), meio: pg.payment_type_id || null, atualizadoEm: new Date() });
-  if (novo === "pago") await avisarTelegram(env, textoVenda(ref, p, pg));
+  if (novo === "pago") {
+    await avisarTelegram(env, textoVenda(ref, p, pg));
+    const enviado = await enviarEmailCompra(env, ref, p);
+    if (enviado) await atualizarDoc(env, `pedidos/${ref}`, { emailEnviadoEm: new Date() });
+  }
   return new Response("ok");
 }
 
@@ -329,7 +363,7 @@ async function pedidoAutorizado(u, env) {
   const p = await lerDoc(env, `pedidos/${pedido}`);
   if (!p) return null;
   const h = await sha256(t);
-  if (iguais(p.tokenHash, h)) return { id: pedido, ...p, viaConta: false };
+  if (iguais(p.tokenHash, h) || (p.tokenEmailHash && iguais(p.tokenEmailHash, h))) return { id: pedido, ...p, viaConta: false };
   if (iguais(p.tokenContaHash, h) && new Date(p.tokenContaExpira).getTime() > Date.now()) return { id: pedido, ...p, viaConta: true };
   return null;
 }
@@ -434,6 +468,14 @@ export default {
         // teste do aviso: /testeAviso?chat=<TELEGRAM_CHAT_ID>
         const ok = env.TELEGRAM_CHAT_ID && u.searchParams.get("chat") === String(env.TELEGRAM_CHAT_ID) && await avisarTelegram(env, "✅ Aviso de vendas do Estúdio Benfica ligado! Você vai receber uma mensagem aqui a cada pagamento aprovado.");
         r = json({ ok: !!ok, ...(ok ? {} : { erro: "Confira TELEGRAM_TOKEN e TELEGRAM_CHAT_ID no Cloudflare e se você já mandou /start para o seu bot." }) }, ok ? 200 : 400);
+      }
+      else if (u.pathname === "/testeEmail") {
+        // teste do e-mail: /testeEmail?chat=<TELEGRAM_CHAT_ID>&para=<seu e-mail>
+        const para = u.searchParams.get("para") || "";
+        const ok = env.TELEGRAM_CHAT_ID && u.searchParams.get("chat") === String(env.TELEGRAM_CHAT_ID) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(para)
+          && await enviarEmailJS(env, { to_email: para, nome: "Artur", pedido: "TESTE123", total: Precos.brl(10), qtd: "1", itens: "📷 Foto de teste",
+            link: `${(env.SITE_URL || "https://benficazzz.github.io").replace(/\/$/, "")}/loja.html`, conta: `${(env.SITE_URL || "https://benficazzz.github.io").replace(/\/$/, "")}/conta.html`, dias: String(DIAS_DOWNLOAD) });
+        r = json({ ok: !!ok, ...(ok ? {} : { erro: "Confira as variáveis EMAILJS_* no Cloudflare, a opção de API para aplicativos fora do navegador no EmailJS e o e-mail informado." }) }, ok ? 200 : 400);
       }
       else if (u.pathname === "/") r = json({ ok: true, servico: "Loja Estúdio Benfica" });
       else r = json({ erro: "Rota inexistente" }, 404);
