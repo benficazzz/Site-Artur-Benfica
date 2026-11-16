@@ -77,6 +77,8 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Link curto por evento: campo `curto` + coleção `links/{apelido}` → `{evento}`. `404.html` resolve `/<apelido>` e redireciona para `loja.html#evento/<id>`
 
 ## Outros
+- E-mail automático ao cliente após o pagamento: LIGADO e testado (EmailJS pelo Gmail da loja, grátis até 200/mês; service `service_gghjtsg`). Variáveis `EMAILJS_SERVICE`, `EMAILJS_TEMPLATE`, `EMAILJS_PUBLIC` e segredo `EMAILJS_PRIVATE` no Worker; teste em `/testeEmail?chat=5206927383&para=<e-mail>`. O e-mail leva um link próprio (`tokenEmailHash`, 30 dias)
+- Loja no celular: itens carregam em partes (24 primeiro, depois de 60 em 60, `listarItensPagina`); seleção com "+"/"✓" e dica na primeira visita
 - Aviso de venda no Telegram: LIGADO e testado (bot "Venda Lojinha Benfica", chat 5206927383). Segredo `TELEGRAM_TOKEN` e texto `TELEGRAM_CHAT_ID` no Worker; teste em `/testeAviso?chat=5206927383`
 - Páginas legais: `termos.html` e `privacidade.html` (CNPJ 69.264.690/0001-92, Betim/MG; texto modelo, revisar com contador)
 - Cache: `python3 ferramentas/versao.py` carimba `?v=` nos CSS/JS antes de cada publicação
@@ -86,4 +88,4 @@ publicar, apagar ou enviar algo para fora. Não inventar dados (clientes, númer
 - Publicar a prévia no Artifact
 - Commitar com mensagem em português e enviar para a branch de trabalho
 - Para levar ao site: abrir PR para o `main`. O merge é sempre feito pelo Artur
-- Pendências futuras: e-mail automático com os links (precisa de domínio), domínio próprio, Google Search Console/Meu Negócio, busca por camisa, foto do Sobre, showreel, textos
+- Pendências futuras: domínio próprio, Google Search Console/Meu Negócio, busca por camisa, foto do Sobre, showreel, textos
