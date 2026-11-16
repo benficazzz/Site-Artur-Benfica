@@ -3,12 +3,12 @@
    Identidade: preto · azul · branco · verde-limão
    ========================================================= */
 :root {
-  --black: #07080b;
-  --black-2: #0e1016;
-  --black-3: #161924;
+  --black: #070a12;
+  --black-2: #0c1220;
+  --black-3: #141c2e;
   --line: rgba(255, 255, 255, 0.09);
   --white: #f5f7fa;
-  --muted: #9aa3b5;
+  --muted: #95a1ba;
   --blue: #2563ff;
   --blue-2: #1239c9;
   --lime: #c8ff1a;
@@ -29,7 +29,7 @@
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  background: var(--black);
+  background: var(--black) radial-gradient(1200px 700px at 85% -10%, rgba(37,99,255,.10), transparent 60%) no-repeat;
   color: var(--white);
   font-family: var(--font-body);
   font-size: clamp(16px, 1.05vw, 17px);
@@ -75,12 +75,12 @@ body::after {
 .section__head--row { max-width: none; display: flex; justify-content: space-between; align-items: flex-end; gap: 30px; flex-wrap: wrap; }
 .section__title {
   font-family: var(--font-display);
-  font-size: clamp(2.1rem, 5.2vw, 4.2rem);
+  font-size: clamp(2.3rem, 6vw, 4.9rem);
   line-height: 1.04; letter-spacing: -0.03em; margin: 0; font-weight: 700;
 }
 .accent { font-style: normal; color: var(--lime); }
 .accent--blue { color: var(--blue); filter: brightness(1.35); }
-p { color: #c9cfdb; }
+p { color: #c3cce0; }
 
 /* ---------- Botões ---------- */
 .btn {
@@ -100,9 +100,10 @@ p { color: #c9cfdb; }
 }
 .btn:hover::before { transform: translateY(0); }
 .btn:hover { color: var(--black); }
-.btn--lime { --bg: var(--lime); --fg: var(--black); box-shadow: 0 10px 40px -10px rgba(200,255,26,.6); }
-.btn--blue { --bg: var(--blue); --fg: var(--white); box-shadow: 0 10px 40px -10px rgba(37,99,255,.7); }
-.btn--ghost { border: 1px solid rgba(255,255,255,.25); }
+.btn--lime { --bg: var(--lime); --fg: var(--black); box-shadow: 0 10px 30px -4px rgba(200,255,26,.38), 0 0 0 1px rgba(200,255,26,.25) inset; }
+.btn--lime:hover { box-shadow: 0 14px 44px -2px rgba(200,255,26,.55); transform: translateY(-2px); }
+.btn--blue { --bg: var(--blue); --fg: var(--white); box-shadow: 0 10px 30px -4px rgba(37,99,255,.5); }
+.btn--ghost { border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.04); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .btn--small { padding: 10px 20px; font-size: .88rem; }
 .btn--block { width: 100%; }
 
@@ -212,7 +213,7 @@ p { color: #c9cfdb; }
 .hero__content { position: relative; z-index: 2; }
 .hero__title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(2.3rem, 5.4vw, 5.2rem); line-height: 1; letter-spacing: -.04em;
+  font-size: clamp(2.5rem, 6vw, 5.8rem); line-height: .98; letter-spacing: -.045em;
   margin: 0 0 32px;
 }
 .hero__title .line { display: block; overflow: hidden; padding-bottom: .08em; }
