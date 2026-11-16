@@ -3,7 +3,7 @@
    - Modo demonstração: catálogo local (js/loja-demo.js)
    - Modo real: catálogo no Firestore + pagamento via Cloud Functions
    ========================================================= */
-import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161428";
+import { criarBancoFirebase, criarBancoTeste } from "./banco.js?v=202611161901";
 const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 const P = window.Precos;
@@ -413,3 +413,7 @@ carregar().then(() => { rota(); renderCarrinho(); }).catch((err) => {
   console.error(err);
   $("#lista-eventos").innerHTML = `<p class="loja__vazio">Não foi possível carregar a loja agora. Tente de novo em instantes.</p>`;
 });
+
+/* altura real do cabeçalho, para os filtros grudarem logo abaixo dele */
+const ajustarTopo = () => document.documentElement.style.setProperty("--topo", ($(".header")?.offsetHeight || 64) + "px");
+ajustarTopo(); addEventListener("resize", ajustarTopo);

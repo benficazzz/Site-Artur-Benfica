@@ -130,3 +130,31 @@
 .dica-sel__icone { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--lime); color: var(--lime); font-weight: 700; }
 .dica-sel__ver { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,.12); font-size: .75rem; }
 .dica-sel button { flex: none; padding: 8px 14px; border-radius: 999px; background: var(--lime); color: var(--black); font-weight: 600; font-size: .85rem; }
+
+/* ---------- Celular: menos rolagem, tudo à mão ---------- */
+.loja__voltar a + a::before { content: "·"; margin: 0 10px; color: var(--line); }
+@media (max-width: 860px) {
+  .loja__voltar { font-size: .9rem; }
+  #tela-evento .section__title { font-size: clamp(1.6rem, 7.5vw, 2.4rem); }
+  #tela-evento .eyebrow { font-size: .62rem; }
+  .evento__topo { display: contents; }
+  .evento__topo > div:first-child { margin: 8px 0 12px; }
+  /* filtros grudam no topo enquanto rola as fotos */
+  .evento__filtros { position: sticky; top: var(--topo, 64px); z-index: 20; width: calc(100% + 2 * var(--gutter)); margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter);
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; background: rgba(7,10,18,.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .evento__filtros::-webkit-scrollbar { display: none; }
+  .evento__filtros select { flex: none; max-width: 60vw; padding: 9px 14px; font-size: .88rem; }
+  .seg { flex: none; }
+  /* pacotes viram uma faixa deslizante */
+  .pacotes { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter) 4px; scrollbar-width: none; }
+  .pacotes::-webkit-scrollbar { display: none; }
+  .pacote { flex: 0 0 82%; scroll-snap-align: start; padding: 12px 14px; gap: 3px; }
+  .pacote b { font-size: .95rem; }
+  .pacote small { font-size: .82rem; line-height: 1.35; }
+  .evento__acoes { margin: 12px 0 10px; font-size: .85rem; }
+  .itens { gap: 6px; }
+  .item__ver, .item__check { width: 34px; height: 34px; top: 8px; }
+  .item__ver { left: 8px; } .item__check { right: 8px; }
+  .carrinho-barra { bottom: max(12px, env(safe-area-inset-bottom)); }
+  .loja__main { padding-bottom: 96px; }
+}
