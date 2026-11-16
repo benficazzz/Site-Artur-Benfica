@@ -126,15 +126,25 @@ Não é a transcrição literal do chat. Contexto técnico resumido em `CLAUDE.m
 ## Contas e serviços usados
 | Serviço | Para quê | Onde |
 |---|---|---|
-| GitHub | Código e hospedagem do site | benficazzz/Site-Artur-Benfica (Pages na branch `main`) |
+| GitHub | Código e hospedagem do site | benficazzz/benficazzz.github.io (Pages na branch `main`; antes Site-Artur-Benfica) |
 | Firebase (Spark) | Login, banco de dados (eventos, preços, pedidos) | projeto `estudio-benfica` |
 | Google Drive | Originais das fotos e vídeos | pasta "Loja Estúdio Benfica · Originais" |
 | Google Cloud | Conta de serviço do servidor | `loja-servidor@…` |
 | Cloudflare Workers | Servidor de pagamento e downloads | `loja-estudio-benfica` |
 | Mercado Pago (CNPJ) | Pix, cartão e boleto | aplicação "Loja Estudio Benfica" |
 | Telegram | Aviso de vendas | bot "Venda Lojinha Benfica" |
+| EmailJS | E-mail ao cliente com o link das fotos | Gmail da loja, service `service_gghjtsg` (grátis até 200/mês) |
 
 **Senhas e chaves nunca ficam no código:** elas ficam apenas como segredos no Cloudflare.
 
 ## Mesclagens (pull requests)
-#1 site v1 · #2 painel e loja escondida · #3 lançamento da loja · #4 pagamento online · #5 Minha conta · #6 título, versão, termos e Telegram · #7 CNPJ e cidade.
+#1 site v1 · #2 painel e loja escondida · #3 lançamento da loja · #4 pagamento online · #5 Minha conta · #6 título, versão, termos e Telegram · #7 CNPJ e cidade · #8 vídeo inteiro na prévia e links curtos · #9 visual mais premium · #10 loja mais rápida no celular, seleção mais clara e e-mail automático.
+
+## 16/11/2026
+- **Endereço novo:** repositório renomeado para `benficazzz.github.io`. O site agora é https://benficazzz.github.io/ e os links antigos (`/Site-Artur-Benfica/...`) redirecionam sozinhos.
+- **Prévia de vídeo inteira** (480p, com marca d'água), guardada no Drive e entregue pelo Worker em `/previa`. Botão no painel para gerar as prévias dos vídeos antigos.
+- **Link curto por evento** (ex.: benficazzz.github.io/f5-league). Regras do Firestore atualizadas com a coleção `links`.
+- **Visual mais premium:** fundo com tom azul, títulos maiores, texto em cinza-azulado, botões com brilho. Inspiração analisada: gmxindustrial.com.br.
+- **Loja no celular:** fotos carregam em partes (24 primeiro, o resto em segundo plano); "+" e "✓" na seleção e dica na primeira visita.
+- **E-mail automático** ao cliente quando o pagamento é aprovado (EmailJS pelo Gmail da loja). Testado com sucesso.
+- Decisão: não usar rodízio de vários e-mails para fugir do spam (prejudica a entrega). Um remetente só; com mais de 200 vendas por mês, comprar domínio e migrar para o Brevo.
