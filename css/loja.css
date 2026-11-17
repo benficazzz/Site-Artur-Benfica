@@ -188,3 +188,8 @@ body:has(#lb.is-open) .wa-loja, body:has(.carrinho[aria-hidden="false"]) .wa-loj
   .lb-rodape .btn { width: 100%; max-width: 420px; }
   .selos { grid-template-columns: 1fr; }
 }
+
+.rodape-mini { border-top: 1px solid var(--line); padding: 26px 0 120px; font-size: .8rem; color: var(--muted); }
+.rodape-mini .container { display: flex; justify-content: space-between; gap: 10px 24px; flex-wrap: wrap; }
+.rodape-mini a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.rodape-mini a:hover { color: var(--white); }

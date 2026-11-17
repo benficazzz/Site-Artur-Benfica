@@ -398,7 +398,7 @@ p { color: #c3cce0; }
 
 /* ---------- Footer ---------- */
 .footer { border-top: 1px solid var(--line); padding: 60px 0 30px; overflow: hidden; }
-.footer__big { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 5.9vw, 4.8rem); line-height: .9; letter-spacing: -.05em; white-space: nowrap; background: linear-gradient(90deg, var(--white), var(--blue) 55%, var(--lime)); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: .95; }
+.footer__big { display: block; font-family: var(--font-logo); font-weight: 800; font-size: clamp(1.3rem, 5.9vw, 4.8rem); line-height: 1.1; padding-top: .1em; letter-spacing: -.05em; white-space: nowrap; background: linear-gradient(90deg, var(--white), var(--blue) 55%, var(--lime)); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: .95; }
 .footer__row { margin-top: 36px; display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; font-size: .88rem; color: var(--muted); }
 
 /* ---------- WhatsApp flutuante ---------- */
@@ -561,3 +561,18 @@ html { scrollbar-width: thin; scrollbar-color: var(--lime) var(--black); }
 
 .footer__legal a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
 .footer__legal a:hover { color: var(--white); }
+
+/* ---------- Profissional: rodapé completo, atalho de acessibilidade ---------- */
+.pular-conteudo { position: fixed; left: 12px; top: -60px; z-index: 300; padding: 10px 18px; border-radius: 999px; background: var(--lime); color: var(--black); font-weight: 700; transition: top .2s; }
+.pular-conteudo:focus { top: 12px; }
+.footer__cols { display: grid; grid-template-columns: 1.3fr 1fr 1.2fr; gap: 32px; margin-top: 44px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.footer__col { display: flex; flex-direction: column; gap: 8px; font-size: .92rem; }
+.footer__col p { margin: 0; color: var(--muted); line-height: 1.55; }
+.footer__col a { color: #d4d9e3; width: fit-content; transition: color .25s; }
+.footer__col a:hover { color: var(--lime); }
+.footer__titulo { font-family: var(--font-mono); font-size: .72rem !important; letter-spacing: .18em; text-transform: uppercase; color: var(--lime) !important; margin-bottom: 4px !important; }
+.footer__cnpj { font-family: var(--font-mono); font-size: .78rem; }
+.footer__ig { display: inline-flex; align-items: center; gap: 8px; }
+.footer__ig svg { width: 18px; height: 18px; fill: currentColor; }
+@media (max-width: 760px) { .footer__cols { grid-template-columns: 1fr; gap: 26px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
