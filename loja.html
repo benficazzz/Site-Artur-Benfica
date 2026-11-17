@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Loja · Estúdio Benfica</title>
   <meta name="description" content="Encontre e compre suas fotos e vídeos de jogos e eventos do Estúdio Benfica. Pague com Pix, crédito ou débito." />
-  <meta name="theme-color" content="#07080b" />
+  <meta name="theme-color" content="#070a12" />
   <meta property="og:title" content="Loja · Estúdio Benfica" />
   <meta property="og:description" content="Encontre e compre suas fotos e vídeos dos jogos e eventos. Pix na hora e arquivos no seu e-mail." />
   <meta property="og:type" content="website" />
@@ -13,15 +13,21 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://benficazzz.github.io/loja.html" />
   <meta property="og:image" content="https://benficazzz.github.io/assets/logo/png/capa-1920x1080.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Benfica" />
   <link rel="icon" href="assets/logo/svg/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/logo/png/favicon-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=202611161911" />
-  <link rel="stylesheet" href="css/loja.css?v=202611161911" />
+  <link rel="stylesheet" href="css/style.css?v=202611171911" />
+  <link rel="stylesheet" href="css/loja.css?v=202611171911" />
 </head>
 <body class="loja is-ready">
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
   <header class="header is-scrolled">
     <a href="index.html" class="logo" aria-label="Estúdio Benfica, página inicial">
       <svg class="logo__mark" viewBox="0 0 100 100" aria-hidden="true"><path d="M8 30V8h22M70 8h22v22M92 70v22H70M30 92H8V70" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path class="play" d="M40 31 L71 50 L40 69 Z" fill="#c8ff1a" stroke="#c8ff1a" stroke-width="6" stroke-linejoin="round"/></svg>
@@ -36,7 +42,7 @@
     <div class="loja__voltar"><a href="conta.html">Minha conta</a><a href="index.html" aria-label="Voltar ao site">Site</a></div>
   </header>
 
-  <main class="loja__main">
+  <main class="loja__main" id="conteudo">
     <div class="loja__aviso" id="aviso-demo" hidden>
       <b>Loja em pré-lançamento.</b> O pagamento online ainda não está ativado: você já pode montar o carrinho e ver os preços.
     </div>
@@ -95,6 +101,12 @@
       <a href="loja.html" class="btn btn--ghost">Voltar à loja</a>
     </section>
   </main>
+  <footer class="rodape-mini">
+    <div class="container">
+      <span>© 2026 Estúdio Benfica · CNPJ 69.264.690/0001-92 · Betim/MG</span>
+      <span><a href="termos.html">Termos</a> · <a href="privacidade.html">Privacidade</a> · <a href="https://www.instagram.com/benfica.estudio/" target="_blank" rel="noopener">Instagram</a> · <a href="https://wa.me/5531992264733" target="_blank" rel="noopener">WhatsApp</a></span>
+    </div>
+  </footer>
 
   <!-- Barra do carrinho -->
   <div class="carrinho-barra" id="barra" hidden>
@@ -139,10 +151,10 @@
 
   <a href="#" class="wa-loja" id="wa-loja" aria-label="Dúvidas? Fale no WhatsApp"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.5-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.7 5 .8.4 1.4.6 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
 
-  <script src="js/config.js?v=202611161911"></script>
-  <script src="js/firebase-config.js?v=202611161911"></script>
-  <script src="js/precos.js?v=202611161911"></script>
-  <script src="js/loja-demo.js?v=202611161911"></script>
-  <script type="module" src="js/loja.js?v=202611161911"></script>
+  <script src="js/config.js?v=202611171911"></script>
+  <script src="js/firebase-config.js?v=202611171911"></script>
+  <script src="js/precos.js?v=202611171911"></script>
+  <script src="js/loja-demo.js?v=202611171911"></script>
+  <script type="module" src="js/loja.js?v=202611171911"></script>
 </body>
 </html>
